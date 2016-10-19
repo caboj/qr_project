@@ -26,6 +26,10 @@ public class QuantitySpace
             quantatySpace[i] = space[i];
         }
     }
+    public int getLength()
+    {
+        return quantatySpace.length;
+    }
 
     public String[] getQuantitySpace()
     {

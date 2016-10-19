@@ -9,31 +9,56 @@ public class State
     Height height;
     Pressure pressure;
 
-    public State(String[][] parameters)
+    private State previousState;
+    private State nextState;
+
+    public State getPreviousState()
     {
-        String[][] myStringArray = new String [][] {
-                { "X0", "Y0"},
-                { "X1", "Y1"},
-                { "X2", "Y2"},
-                { "X3", "Y3"},
-                { "X4", "Y4"} };
-
-        for (int i = 0; i < 5; i ++)
-        {
-            for(int j = 0; j < 2; j++)
-            {
-                System.out.print(parameters[i][j]);
-
-            }
-        }
-
-        Inflow inflow = new Inflow("0", 2);
-        Outflow outflow = new Outflow("0", 3);
-        Volume volume = new Volume("+", 3);
-        Height height = new Height("+", 3);
-        Pressure pressure = new Pressure("+", 3);
+        return previousState;
+    }
+    public void setPreviousState(State previousState)
+    {
+        this.previousState = previousState;
+    }
+    public State getNextState()
+    {
+        return nextState;
+    }
+    public void setNextState(State nextState)
+    {
+        this.nextState = nextState;
     }
 
+
+    /***
+     *
+     * @param parameters magnitude and derivaty for Inflow, Outflow, Volume, Height, Pressure
+     * Previous and next state are set to null
+     */
+    public State(String[][] parameters)
+    {
+        this.inflow = new Inflow(parameters[0][0], 2);
+        this.outflow = new Outflow(parameters[1][0], 3);
+        this.volume = new Volume(parameters[2][0], 3);
+        this.height = new Height(parameters[3][0], 3);
+        this.pressure = new Pressure(parameters[4][0], 3);
+        this.previousState = null;
+        this.nextState = null;
+    }
+
+    private String[][] getParameters()
+    {
+        return new String [][] {
+                { inflow.getMagnitude(), inflow.getDerivaty()},
+                { outflow.getMagnitude(), outflow.getDerivaty()},
+                { volume.getMagnitude(), volume.getDerivaty()},
+                { height.getMagnitude(), height.getDerivaty()},
+                { pressure.getMagnitude(), pressure.getDerivaty()} };
+    }
+    public State copy()
+    {
+        return new State(this.getParameters());
+    }
     public String toString()
     {
         StringBuilder sb = new StringBuilder();

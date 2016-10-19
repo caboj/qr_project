@@ -18,6 +18,31 @@ public abstract class Quantity
         this.derivatySpace = new DerivatySpace();
     }
 
+
+    public void increaseMagnitude()
+    {
+        if (this.magnitude < (quantitySpace.getLength()-1))
+        {
+            magnitude++;
+        }
+        else
+        {
+            System.out.println("Sorry, magnitude can't be increased anymore");
+        }
+    }
+
+    public void decreaseMagnitude()
+    {
+        if(this.magnitude > 0)
+        {
+            magnitude--;
+        }
+        else
+        {
+            System.out.println("Sorry, magnitude can't be decreased anymore");
+        }
+    }
+
     public String getMagnitude()
     {
         return quantitySpace.getQuantitySpace()[magnitude];
