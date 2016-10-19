@@ -1,38 +1,21 @@
-/**
- * Created by Elvira on 19-10-16.
- */
-public class QuantitySpace
+class QuantitySpace
 {
-    private String[] quantatySpace;
+    final private String[] quantitySpace;
 
     public QuantitySpace(int length)
     {
         String[] space = {"0","+","MAX"};
 
-        this.quantatySpace = new String[length];
-        for(int i = 0; i < length; i++)
-        {
-            quantatySpace[i] = space[i];
-        }
-    }
-    public QuantitySpace()
-    {
-        int length = 3;
-        String[] space = {"0","+","MAX"};
-
-        this.quantatySpace = new String[length];
-        for(int i = 0; i < length; i++)
-        {
-            quantatySpace[i] = space[i];
-        }
+        this.quantitySpace = new String[length];
+        System.arraycopy(space, 0, quantitySpace, 0, length);
     }
     public int getLength()
     {
-        return quantatySpace.length;
+        return quantitySpace.length;
     }
 
     public String[] getQuantitySpace()
     {
-        return this.quantatySpace;
+        return this.quantitySpace;
     }
 }

@@ -1,13 +1,10 @@
-/**
- * Created by Elvira on 19-10-16.
- */
-public class State
+class State
 {
-    Inflow inflow;
-    Outflow outflow;
-    Volume volume;
-    Height height;
-    Pressure pressure;
+    final Inflow inflow;
+    final Outflow outflow;
+    final Volume volume;
+    final Height height;
+    final Pressure pressure;
 
     private State previousState;
     private State nextState;
@@ -32,16 +29,16 @@ public class State
 
     /***
      *
-     * @param parameters magnitude and derivaty for Inflow, Outflow, Volume, Height, Pressure
+     * @param parameters magnitude and derivative for Inflow, Outflow, Volume, Height, Pressure
      * Previous and next state are set to null
      */
     public State(String[][] parameters)
     {
-        this.inflow = new Inflow(parameters[0][0], 2);
-        this.outflow = new Outflow(parameters[1][0], 3);
-        this.volume = new Volume(parameters[2][0], 3);
-        this.height = new Height(parameters[3][0], 3);
-        this.pressure = new Pressure(parameters[4][0], 3);
+        this.inflow = new Inflow(parameters[0][0]);
+        this.outflow = new Outflow(parameters[1][0]);
+        this.volume = new Volume(parameters[2][0]);
+        this.height = new Height(parameters[3][0]);
+        this.pressure = new Pressure(parameters[4][0]);
         this.previousState = null;
         this.nextState = null;
     }
@@ -49,11 +46,11 @@ public class State
     private String[][] getParameters()
     {
         return new String [][] {
-                { inflow.getMagnitude(), inflow.getDerivaty()},
-                { outflow.getMagnitude(), outflow.getDerivaty()},
-                { volume.getMagnitude(), volume.getDerivaty()},
-                { height.getMagnitude(), height.getDerivaty()},
-                { pressure.getMagnitude(), pressure.getDerivaty()} };
+                { inflow.getMagnitude(), inflow.getDerivative()},
+                { outflow.getMagnitude(), outflow.getDerivative()},
+                { volume.getMagnitude(), volume.getDerivative()},
+                { height.getMagnitude(), height.getDerivative()},
+                { pressure.getMagnitude(), pressure.getDerivative()} };
     }
     public State copy()
     {
@@ -61,14 +58,10 @@ public class State
     }
     public String toString()
     {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(inflow.toString());
-        sb.append(outflow.toString());
-        sb.append(volume.toString());
-        sb.append(height.toString());
-        sb.append(pressure.toString());
-
-        return sb.toString();
+        return inflow.toString() +
+                outflow.toString() +
+                volume.toString() +
+                height.toString() +
+                pressure.toString();
     }
 }

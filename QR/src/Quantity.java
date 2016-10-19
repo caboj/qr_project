@@ -1,29 +1,26 @@
-/**
- * Created by Elvira on 19-10-16.
- */
-public abstract class Quantity
+abstract class Quantity
 {
     private QuantitySpace quantitySpace;
-    private DerivatySpace derivatySpace;
+    private DerivativeSpace derivativeSpace;
 
     private int  magnitude;
-    private int derivaty;
+    private int derivative;
 
-    public void setQuantitySpace(int length)
+    void setQuantitySpace(int length)
     {
         this.quantitySpace = new QuantitySpace(length);
     }
-    public void setDerivatySpace()
+    void setDerivativeSpace()
     {
-        this.derivatySpace = new DerivatySpace();
+        this.derivativeSpace = new DerivativeSpace();
     }
 
 
-    public void increaseMagnitude()
+    void increaseMagnitude()
     {
         if (this.magnitude < (quantitySpace.getLength()-1))
         {
-            magnitude++;
+            this.magnitude++;
         }
         else
         {
@@ -31,11 +28,11 @@ public abstract class Quantity
         }
     }
 
-    public void decreaseMagnitude()
+    void decreaseMagnitude()
     {
         if(this.magnitude > 0)
         {
-            magnitude--;
+            this.magnitude--;
         }
         else
         {
@@ -43,12 +40,35 @@ public abstract class Quantity
         }
     }
 
-    public String getMagnitude()
+    void increaseDerivative()
+    {
+        if(this.derivative<2)
+        {
+            this.derivative++;
+        }
+        else
+        {
+            System.out.println("Quantity is already increasing");
+        }
+    }
+    void decreaseDerivative()
+    {
+        if(this.derivative < 0)
+        {
+            this.derivative--;
+        }
+        else
+        {
+            System.out.println("Quantity is already decreasing");
+        }
+    }
+
+    String getMagnitude()
     {
         return quantitySpace.getQuantitySpace()[magnitude];
     }
 
-    public void setMagnitude(String magnitude)
+    void setMagnitude(String magnitude)
     {
         switch (magnitude)
         {
@@ -64,23 +84,23 @@ public abstract class Quantity
         }
     }
 
-    public String getDerivaty()
+    String getDerivative()
     {
-        return derivatySpace.getDerivatySpace()[derivaty];
+        return derivativeSpace.getDerivativeSpace()[derivative];
     }
 
-    public void setDerivaty(String derivaty)
+    void setDerivative(String derivative)
     {
-        switch (derivaty)
+        switch (derivative)
         {
             case "-":
-                this.derivaty = 0;
+                this.derivative = 0;
                 break;
             case "0":
-                this.derivaty = 1;
+                this.derivative = 1;
                 break;
             case "+":
-                this.derivaty = 2;
+                this.derivative = 2;
                 break;
         }
     }

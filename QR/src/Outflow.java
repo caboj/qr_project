@@ -1,18 +1,23 @@
-/**
- * Created by Elvira on 18-10-16.
- */
-public class Outflow extends Quantity
+class Outflow extends Quantity
 {
-    public Outflow(String magnitude, int quantatySpaceLength)
+    public Outflow(String magnitude, int quantitySpaceLength)
     {
-        this.setQuantitySpace(quantatySpaceLength);
-        this.setDerivatySpace();
+        this.setQuantitySpace(quantitySpaceLength);
+        this.setDerivativeSpace();
         this.setMagnitude(magnitude);
-        this.setDerivaty("0");
+        this.setDerivative("0");
+    }
+    public Outflow(String magnitude)
+    {
+        int quantitySpaceLength = 3;
+        this.setQuantitySpace(quantitySpaceLength);
+        this.setDerivativeSpace();
+        this.setMagnitude(magnitude);
+        this.setDerivative("0");
     }
 
     public String toString()
     {
-        return ("Outflow:\t" + this.getMagnitude() + "\t" + this.getDerivaty() + "\n");
+        return ("Outflow:\t" + this.getMagnitude() + "\t" + this.getDerivative() + "\n");
     }
 }

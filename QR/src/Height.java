@@ -1,18 +1,24 @@
-/**
- * Created by Elvira on 19-10-16.
- */
-public class Height extends Quantity
+class Height extends Quantity
 {
-    public Height(String magnitude, int quantatySpaceLength)
+    public Height(String magnitude, int quantitySpaceLength)
     {
-        this.setQuantitySpace(quantatySpaceLength);
-        this.setDerivatySpace();
+        this.setQuantitySpace(quantitySpaceLength);
+        this.setDerivativeSpace();
         this.setMagnitude(magnitude);
-        this.setDerivaty("0");
+        this.setDerivative("0");
+    }
+
+    public Height(String magnitude)
+    {
+        int quantitySpaceLength = 3;
+        this.setQuantitySpace(quantitySpaceLength);
+        this.setDerivativeSpace();
+        this.setMagnitude(magnitude);
+        this.setDerivative("0");
     }
 
     public String toString()
     {
-        return ("Height:\t \t" + this.getMagnitude() + "\t" + this.getDerivaty() + "\n");
+        return ("Height:\t \t" + this.getMagnitude() + "\t" + this.getDerivative() + "\n");
     }
 }

@@ -1,18 +1,24 @@
-/**
- * Created by Elvira on 19-10-16.
- */
-public class Volume extends Quantity
+class Volume extends Quantity
 {
-    public Volume(String magnitude, int quantatySpaceLength)
+    public Volume(String magnitude, int quantitySpaceLength)
     {
-        this.setQuantitySpace(quantatySpaceLength);
-        this.setDerivatySpace();
+        this.setQuantitySpace(quantitySpaceLength);
+        this.setDerivativeSpace();
         this.setMagnitude(magnitude);
-        this.setDerivaty("0");
+        this.setDerivative("0");
+    }
+
+    public Volume(String magnitude)
+    {
+        int quantitySpaceLength = 3;
+        this.setQuantitySpace(quantitySpaceLength);
+        this.setDerivativeSpace();
+        this.setMagnitude(magnitude);
+        this.setDerivative("0");
     }
 
     public String toString()
     {
-        return ("Volume:\t \t" + this.getMagnitude() + "\t" + this.getDerivaty() + "\n");
+        return ("Volume:\t \t" + this.getMagnitude() + "\t" + this.getDerivative() + "\n");
     }
 }
