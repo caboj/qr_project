@@ -8,28 +8,6 @@ public class State
     final Height height;
     final Pressure pressure;
 
-/*
-    private State previousState;
-    private State nextState;
-
-    public State getPreviousState()
-    {
-        return previousState;
-    }
-    public void setPreviousState(State previousState)
-    {
-        this.previousState = previousState;
-    }
-    public State getNextState()
-    {
-        return nextState;
-    }
-    public void setNextState(State nextState)
-    {
-        this.nextState = nextState;
-    }
-
-*/
     /***
      *
      * @param parameters magnitude and derivative for Inflow, Outflow, Volume, Height, Pressure
@@ -37,11 +15,11 @@ public class State
      */
     public State(String[][] parameters)
     {
-        this.inflow = new Inflow(parameters[0][0]);
-        this.outflow = new Outflow(parameters[1][0]);
-        this.volume = new Volume(parameters[2][0]);
-        this.height = new Height(parameters[3][0]);
-        this.pressure = new Pressure(parameters[4][0]);
+        this.inflow = new Inflow(parameters[0][0], parameters[0][1], 0);
+        this.outflow = new Outflow(parameters[1][0], parameters[1][1],0);
+        this.volume = new Volume(parameters[2][0],parameters[2][1],0);
+        this.height = new Height(parameters[3][0],parameters[3][1],0);
+        this.pressure = new Pressure(parameters[4][0],parameters[4][1],0);
     }
 
     private String[][] getParameters()
@@ -63,7 +41,7 @@ public class State
         {
             for(int j = 0; j < state.getParameters()[i].length; j++)
             {
-                if(state.getParameters()[i][j] != this.getParameters()[i][j])
+                if(!state.getParameters()[i][j].equalsIgnoreCase(this.getParameters()[i][j]))
                 {
                     return false;
                 }

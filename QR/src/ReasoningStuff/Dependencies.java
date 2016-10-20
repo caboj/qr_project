@@ -4,9 +4,13 @@ import TreeStuff.Node;
 
 import java.util.Optional;
 
+@SuppressWarnings("DanglingJavadoc")
 class Dependencies
 {
-    /***
+
+    //daarnaast missen interne dependencies. Zo als als de derivative increasing is, dan moet the magnitude ook increasen. Zou je die ook kunnen implementeren aub?
+
+    /**
      * The amount of inflow increases the volume of water in the tub
      * @param node Node with start state as node.getData()
      * @return Returns an Optional<State>, means if there are changes,
@@ -23,7 +27,7 @@ class Dependencies
         return Optional.empty();
     }
 
-    /***
+    /**
      *  The amount of outflow decreases the volume of water in the tub
      * @param node Node with start state as node.getData()
      * @return Returns an Optional<State>, means if there are changes,
@@ -40,7 +44,7 @@ class Dependencies
         return Optional.empty();
     }
 
-    /***
+    /**
      *
      * P+(Volume, Outflow)  - outflow changes are proportional to volume changes
      * P+(Volume, ReasoningStuff.Height)   - height changes are proportional to volume changes
@@ -80,7 +84,7 @@ class Dependencies
         return Optional.empty();
     }
 
-    /***
+    /**
      * The outflow is at its highest value (max), when the volume is at it highest value.
      *
      * But, outflow can't increase to the "MAX" at once if it was "0", it has to become "+" first,
@@ -99,9 +103,7 @@ class Dependencies
         return this.increaseMagnitude(node, "outflow");
     }
 
-
-
-    /***
+    /**
      * There is no outflow, when there is no volume.
      *
      * But, outflow can't decrease to the "0" at once if it was "MAX", it has to become "+" first,
@@ -123,22 +125,23 @@ class Dependencies
 
     /**************************** Help methods ********************************************/
 
-    /***
+    /**
      * Additional method to decide which of the two VC methods to call.
      * @param node Node with start state as node.getData()
      */
-    void VC(Node node)
+    Optional<State> VC(Node node)
     {
         if(node.getData().volume.getMagnitude().equalsIgnoreCase("MAX"))
         {
-            maxVC(node);
+            return maxVC(node);
         }
         else if (node.getData().volume.getMagnitude().equalsIgnoreCase("0"))
         {
-            zeroVC(node);
+            return zeroVC(node);
         }
+        return Optional.empty();
     }
-    /***
+    /**
      * Four methods to increase and decrease Magnitude and Derivative of each quantity in general.
      *
      * @param node Node with start state as node.getData()

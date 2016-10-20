@@ -2,20 +2,16 @@ package ReasoningStuff;
 
 class Outflow extends Quantity
 {
-    public Outflow(String magnitude, int quantitySpaceLength)
+    public Outflow(String magnitude, String derivative, int quantitySpaceLength)
     {
+        if(quantitySpaceLength == 0)
+        {
+            quantitySpaceLength = 3;
+        }
         this.setQuantitySpace(quantitySpaceLength);
         this.setDerivativeSpace();
         this.setMagnitude(magnitude);
-        this.setDerivative("0");
-    }
-    public Outflow(String magnitude)
-    {
-        int quantitySpaceLength = 3;
-        this.setQuantitySpace(quantitySpaceLength);
-        this.setDerivativeSpace();
-        this.setMagnitude(magnitude);
-        this.setDerivative("0");
+        this.setDerivative(derivative);
     }
 
     public String toString()

@@ -2,21 +2,16 @@ package ReasoningStuff;
 
 class Inflow extends Quantity
 {
-    public Inflow(String magnitude, int quantitySpaceLength)
+    public Inflow(String magnitude, String derivative, int quantitySpaceLength)
     {
+        if(quantitySpaceLength==0)
+        {
+            quantitySpaceLength = 2;
+        }
         this.setQuantitySpace(quantitySpaceLength);
         this.setDerivativeSpace();
         this.setMagnitude(magnitude);
-        this.setDerivative("0");
-    }
-
-    public Inflow(String magnitude)
-    {
-        int quantitySpaceLength = 2;
-        this.setQuantitySpace(quantitySpaceLength);
-        this.setDerivativeSpace();
-        this.setMagnitude(magnitude);
-        this.setDerivative("0");
+        this.setDerivative(derivative);
     }
 
     public String toString()

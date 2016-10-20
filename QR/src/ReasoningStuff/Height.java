@@ -2,21 +2,16 @@ package ReasoningStuff;
 
 class Height extends Quantity
 {
-    public Height(String magnitude, int quantitySpaceLength)
+    public Height(String magnitude, String derivative, int quantitySpaceLength)
     {
+        if(quantitySpaceLength == 0)
+        {
+            quantitySpaceLength = 3;
+        }
         this.setQuantitySpace(quantitySpaceLength);
         this.setDerivativeSpace();
         this.setMagnitude(magnitude);
-        this.setDerivative("0");
-    }
-
-    public Height(String magnitude)
-    {
-        int quantitySpaceLength = 3;
-        this.setQuantitySpace(quantitySpaceLength);
-        this.setDerivativeSpace();
-        this.setMagnitude(magnitude);
-        this.setDerivative("0");
+        this.setDerivative(derivative);
     }
 
     public String toString()
