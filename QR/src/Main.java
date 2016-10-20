@@ -2,6 +2,8 @@ class Main
 {
     public static void main(String[] args)
     {
+
+        /*
         Dependencies dependencies = new Dependencies();
 
         String[][] parameters = new String [][] {
@@ -19,7 +21,6 @@ class Main
 
         dependencies.influenceNeg(startState.getNextState());
         System.out.println("Third state: \n" + startState.getNextState().getNextState().toString());
-
-
+        */
     }
 }
