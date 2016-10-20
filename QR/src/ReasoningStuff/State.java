@@ -8,7 +8,7 @@ public class State
     final Height height;
     final Pressure pressure;
 
-
+/*
     private State previousState;
     private State nextState;
 
@@ -29,10 +29,10 @@ public class State
         this.nextState = nextState;
     }
 
-
+*/
     /***
      *
-     * @param parameters magnitude and derivative for ReasoningStuff.Inflow, ReasoningStuff.Outflow, ReasoningStuff.Volume, ReasoningStuff.Height, ReasoningStuff.Pressure
+     * @param parameters magnitude and derivative for Inflow, Outflow, Volume, Height, Pressure
      * Previous and next state are set to null
      */
     public State(String[][] parameters)
@@ -42,9 +42,6 @@ public class State
         this.volume = new Volume(parameters[2][0]);
         this.height = new Height(parameters[3][0]);
         this.pressure = new Pressure(parameters[4][0]);
-
-        this.previousState = null;
-        this.nextState = null;
     }
 
     private String[][] getParameters()
@@ -60,6 +57,21 @@ public class State
     {
         return new State(this.getParameters());
     }
+    public boolean equals(State state)
+    {
+        for(int i = 0; i < state.getParameters().length; i++)
+        {
+            for(int j = 0; j < state.getParameters()[i].length; j++)
+            {
+                if(state.getParameters()[i][j] != this.getParameters()[i][j])
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public String toString()
     {
         return inflow.toString() +

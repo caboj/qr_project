@@ -1,29 +1,43 @@
 package ReasoningStuff;
 
+import TreeStuff.Node;
+
+import java.util.Optional;
+
 class Dependencies
 {
     /***
-     *
      * The amount of inflow increases the volume of water in the tub
+     * @param node Node with start state as node.getData()
+     * @return Returns an Optional<State>, means if there are changes,
+     * it returns an optional with a new derived state in it.
+     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
      */
-    void influencePos(State state)
+    // Jacob, ik weet niet zeker of de methode implementatie correct is. Wil je naar dee methode kijken aub?
+    Optional<State> influencePos(Node node)
     {
-        if (state.inflow.getMagnitude().equalsIgnoreCase("+"))
+        if (node.getData().inflow.getMagnitude().equalsIgnoreCase("+"))
         {
-            this.increaseMagnitude(state, "volume");
+            return this.increaseMagnitude(node, "volume");
         }
+        return Optional.empty();
     }
 
     /***
-     *
      *  The amount of outflow decreases the volume of water in the tub
+     * @param node Node with start state as node.getData()
+     * @return Returns an Optional<State>, means if there are changes,
+     * it returns an optional with a new derived state in it.
+     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
      */
-    void influenceNeg(State state)
+    // Jacob, ik weet niet zeker of de methode implementatie correct is. Wil je naar dee methode kijken aub?
+    Optional<State> influenceNeg(Node node)
     {
-        if (state.outflow.getMagnitude().equalsIgnoreCase("+"))
+        if (node.getData().outflow.getMagnitude().equalsIgnoreCase("+"))
         {
-            this.decreaseMagnitude(state, "volume");
+            return this.decreaseMagnitude(node, "volume");
         }
+        return Optional.empty();
     }
 
     /***
@@ -32,98 +46,110 @@ class Dependencies
      * P+(Volume, ReasoningStuff.Height)   - height changes are proportional to volume changes
      * P+(ReasoningStuff.Height, Pressure) - pressure changes are proportional to height changes
      */
-    void proportionalityPos(State state)
+    // Jacob, ik weet niet zeker of de methode implementatie correct is. Wil je naar dee methode kijken aub?
+    // Dit moet echt wel gesplits worden, aangezien het proportional invloed heeft en dus stap voor stap moet gebeuren...
+    Optional<State> proportionalityPos(Node node)
     {
-        if(state.volume.getDerivative().equalsIgnoreCase("-"))
+        if(node.getData().volume.getDerivative().equalsIgnoreCase("-"))
         {
-            this.decreaseDerivative(state, "outflow");
-            this.decreaseDerivative(state, "height");
+            this.decreaseDerivative(node, "outflow");
+            this.decreaseDerivative(node, "height");
         }
-        else if(state.volume.getDerivative().equalsIgnoreCase("+"))
+        else if(node.getData().volume.getDerivative().equalsIgnoreCase("+"))
         {
-            this.increaseDerivative(state, "outflow");
-            this.increaseDerivative(state, "height");
+            this.increaseDerivative(node, "outflow");
+            this.increaseDerivative(node, "height");
         }
         else
         {
             System.out.println("Volume isn't changing");
         }
 
-        if(state.height.getDerivative().equalsIgnoreCase("-"))
+        if(node.getData().height.getDerivative().equalsIgnoreCase("-"))
         {
-            this.decreaseDerivative(state, "pressure");
+            this.decreaseDerivative(node, "pressure");
         }
-        else if(state.height.getDerivative().equalsIgnoreCase("+"))
+        else if(node.getData().height.getDerivative().equalsIgnoreCase("+"))
         {
-            this.increaseDerivative(state, "pressure");
+            this.increaseDerivative(node, "pressure");
         }
         else
         {
             System.out.println("ReasoningStuff.Height isn't changing");
         }
+        return Optional.empty();
     }
 
     /***
-     *
      * The outflow is at its highest value (max), when the volume is at it highest value.
      *
-     */
-    private void maxVC(State state)
-    {
-        switch (state.outflow.getMagnitude())
-        {
-            case "0":
-                this.increaseMagnitude(state, "outflow");
-                this.maxVC(state.getNextState());
-                break;
-            case "+":
-                this.increaseMagnitude(state, "outflow");
-                break;
-            case "MAX":
-                System.out.println("Outflow is already at the highest value.");
-                break;
-        }
-    }
-
-    /***
+     * But, outflow can't increase to the "MAX" at once if it was "0", it has to become "+" first,
+     * because of the domain {0,+,MAX}. And that means a (very short) new state.
+     * After every new state all the dependencies have to be applied to the new state.
+     * That is why this method is not recursive.
      *
-     * There is no outflow, when there is no volume
+     * @param node Node with start state as node.getData()
+     * @return Returns an Optional<State>, means if there are changes,
+     * it returns an optional with a new derived state in it.
+     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
      */
-    private void zeroVC(State state)
+    // Jacob, ik weet niet zeker of de methode implementatie correct is. Wil je naar dee methode kijken aub?
+    private Optional<State> maxVC(Node node)
     {
-        switch (state.outflow.getMagnitude())
-        {
-            case "0":
-                System.out.println("There is already no outflow");
-                break;
-            case "+":
-                this.decreaseMagnitude(state, "outflow");
-                break;
-            case "MAX":
-                this.decreaseMagnitude(state, "outflow");
-                this.zeroVC(state.getNextState());
-                break;
-        }
+        return this.increaseMagnitude(node, "outflow");
     }
 
-    void VC(State state)
-    {
-        if(state.volume.getMagnitude().equalsIgnoreCase("MAX"))
-        {
-            maxVC(state);
-        }
-        else if (state.volume.getMagnitude().equalsIgnoreCase("0"))
-        {
-            zeroVC(state);
-        }
-    }
+
 
     /***
-     * Some handy general methods
+     * There is no outflow, when there is no volume.
+     *
+     * But, outflow can't decrease to the "0" at once if it was "MAX", it has to become "+" first,
+     * because of the domain {0,+,MAX}. And that means a (very short) new state.
+     * After every new state all the dependencies have to be applied to the new state.
+     * That is why this method is not recursive.
+     *
+     * @param node Node with start state as node.getData()
+     * @return Returns an Optional<State>, means if there are changes,
+     * it returns an optional with a new derived state in it.
+     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
      */
-    private void increaseMagnitude(State state, String quantity)
+    // Jacob, ik weet niet zeker of de methode implementatie correct is. Wil je naar dee methode kijken aub?
+    private Optional<State> zeroVC(Node node)
     {
-        State nextState = state.copy();
+       return this.decreaseMagnitude(node,"outflow");
+    }
+
+
+    /**************************** Help methods ********************************************/
+
+    /***
+     * Additional method to decide which of the two VC methods to call.
+     * @param node Node with start state as node.getData()
+     */
+    void VC(Node node)
+    {
+        if(node.getData().volume.getMagnitude().equalsIgnoreCase("MAX"))
+        {
+            maxVC(node);
+        }
+        else if (node.getData().volume.getMagnitude().equalsIgnoreCase("0"))
+        {
+            zeroVC(node);
+        }
+    }
+    /***
+     * Four methods to increase and decrease Magnitude and Derivative of each quantity in general.
+     *
+     * @param node Node with start state as node.getData()
+     * @param quantity Quantity with has to be increased or decreased
+     * @return Returns an Optional<State>, means if there are changes,
+     * it returns an optional with a new derived state in it.
+     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
+     */
+    private Optional<State> increaseMagnitude(Node node, String quantity)
+    {
+        State nextState = node.getData().copy();
         switch (quantity)
         {
             case "inflow":
@@ -139,13 +165,15 @@ class Dependencies
                 nextState.height.increaseMagnitude();
                 break;
         }
-        state.setNextState(nextState);
-        nextState.setPreviousState(state);
+        if (!nextState.equals(node.getData()))
+        {
+            return Optional.of(nextState);
+        }
+        return Optional.empty();
     }
-
-    private void decreaseMagnitude(State state, String quantity)
+    private Optional<State> decreaseMagnitude(Node node, String quantity)
     {
-        State nextState = state.copy();
+        State nextState = node.getData().copy();
         switch (quantity)
         {
             case "inflow":
@@ -161,13 +189,15 @@ class Dependencies
                 nextState.height.decreaseMagnitude();
                 break;
         }
-        state.setNextState(nextState);
-        nextState.setPreviousState(state);
+        if (!nextState.equals(node.getData()))
+        {
+            return Optional.of(nextState);
+        }
+        return Optional.empty();
     }
-
-    private void increaseDerivative(State state, String quantity)
+    private Optional<State> increaseDerivative(Node node, String quantity)
     {
-        State nextState = state.copy();
+        State nextState = node.getData().copy();
         switch (quantity)
         {
             case "inflow":
@@ -183,13 +213,15 @@ class Dependencies
                 nextState.height.increaseDerivative();
                 break;
         }
-        state.setNextState(nextState);
-        nextState.setPreviousState(state);
+        if (!nextState.equals(node.getData()))
+        {
+            return Optional.of(nextState);
+        }
+        return Optional.empty();
     }
-
-    private void decreaseDerivative(State state, String quantity)
+    private Optional<State> decreaseDerivative(Node node, String quantity)
     {
-        State nextState = state.copy();
+        State nextState = node.getData().copy();
         switch (quantity)
         {
             case "inflow":
@@ -205,7 +237,10 @@ class Dependencies
                 nextState.height.decreaseDerivative();
                 break;
         }
-        state.setNextState(nextState);
-        nextState.setPreviousState(state);
+        if (!nextState.equals(node.getData()))
+        {
+            return Optional.of(nextState);
+        }
+        return Optional.empty();
     }
 }

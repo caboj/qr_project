@@ -36,7 +36,7 @@ public class Node
         return name;
     }
 
-    State getData()
+    public State getData()
     {
         return data;
     }
@@ -45,6 +45,7 @@ public class Node
     {
         this.data = data;
     }
+
 
     public List<Node> getChildren()
     {

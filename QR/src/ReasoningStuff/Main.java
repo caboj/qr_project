@@ -7,6 +7,15 @@ class Main
 {
     public static void main(String[] args)
     {
+        testTree();
+    }
+
+    private static void testTree()
+    {
+        /***
+         * Test case for the tree class
+         */
+
         String[][] parameters = new String [][] {
                 { "+", "0"},
                 { "+", "0"},
@@ -41,31 +50,9 @@ class Main
         myTree.addChild(childNode, childState);
         myTree.addChild(childNode, childState);
 
-        /*
-        myTree.addChild(childNode, childState);
-        */
-
         myTree.printTreeByName(myTree.getRoot(), " ");
         System.out.println();
         myTree.printTree(myTree.getRoot(),"\t");
 
-        /*System.out.println(myTree.getRootData().toString());
-        for (Node curr:myTree.getRoot().getChildren())
-        {
-            System.out.println(curr.toString());
-        }*/
-
-        /*
-        ReasoningStuff.Dependencies dependencies = new ReasoningStuff.Dependencies();
-
-
-        System.out.println("Start state:\n" + startState.toString());
-
-        dependencies.influencePos(startState);
-        System.out.println("Next state:\n" + startState.getNextState().toString());
-
-        dependencies.influenceNeg(startState.getNextState());
-        System.out.println("Third state: \n" + startState.getNextState().getNextState().toString());
-        */
     }
 }
