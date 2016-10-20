@@ -1,10 +1,13 @@
-class State
+package ReasoningStuff;
+
+public class State
 {
     final Inflow inflow;
     final Outflow outflow;
     final Volume volume;
     final Height height;
     final Pressure pressure;
+
 
     private State previousState;
     private State nextState;
@@ -29,7 +32,7 @@ class State
 
     /***
      *
-     * @param parameters magnitude and derivative for Inflow, Outflow, Volume, Height, Pressure
+     * @param parameters magnitude and derivative for ReasoningStuff.Inflow, ReasoningStuff.Outflow, ReasoningStuff.Volume, ReasoningStuff.Height, ReasoningStuff.Pressure
      * Previous and next state are set to null
      */
     public State(String[][] parameters)
@@ -39,6 +42,7 @@ class State
         this.volume = new Volume(parameters[2][0]);
         this.height = new Height(parameters[3][0]);
         this.pressure = new Pressure(parameters[4][0]);
+
         this.previousState = null;
         this.nextState = null;
     }

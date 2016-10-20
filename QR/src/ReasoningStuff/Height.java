@@ -1,6 +1,8 @@
-class Volume extends Quantity
+package ReasoningStuff;
+
+class Height extends Quantity
 {
-    public Volume(String magnitude, int quantitySpaceLength)
+    public Height(String magnitude, int quantitySpaceLength)
     {
         this.setQuantitySpace(quantitySpaceLength);
         this.setDerivativeSpace();
@@ -8,7 +10,7 @@ class Volume extends Quantity
         this.setDerivative("0");
     }
 
-    public Volume(String magnitude)
+    public Height(String magnitude)
     {
         int quantitySpaceLength = 3;
         this.setQuantitySpace(quantitySpaceLength);
@@ -19,6 +21,6 @@ class Volume extends Quantity
 
     public String toString()
     {
-        return ("Volume:\t \t" + this.getMagnitude() + "\t" + this.getDerivative() + "\n");
+        return ("Height:\t \t" + this.getMagnitude() + "\t" + this.getDerivative() + "\n");
     }
 }

@@ -1,3 +1,5 @@
+package ReasoningStuff;
+
 class QuantitySpace
 {
     final private String[] quantitySpace;

@@ -1,3 +1,5 @@
+package ReasoningStuff;
+
 class Outflow extends Quantity
 {
     public Outflow(String magnitude, int quantitySpaceLength)

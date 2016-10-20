@@ -1,3 +1,5 @@
+package ReasoningStuff;
+
 class Dependencies
 {
     /***
@@ -27,8 +29,8 @@ class Dependencies
     /***
      *
      * P+(Volume, Outflow)  - outflow changes are proportional to volume changes
-     * P+(Volume, Height)   - height changes are proportional to volume changes
-     * P+(Height, Pressure) - pressure changes are proportional to height changes
+     * P+(Volume, ReasoningStuff.Height)   - height changes are proportional to volume changes
+     * P+(ReasoningStuff.Height, Pressure) - pressure changes are proportional to height changes
      */
     void proportionalityPos(State state)
     {
@@ -57,7 +59,7 @@ class Dependencies
         }
         else
         {
-            System.out.println("Height isn't changing");
+            System.out.println("ReasoningStuff.Height isn't changing");
         }
     }
 

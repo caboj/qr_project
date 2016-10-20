@@ -1,3 +1,5 @@
+package ReasoningStuff;
+
 abstract class Quantity
 {
     private QuantitySpace quantitySpace;
@@ -48,7 +50,7 @@ abstract class Quantity
         }
         else
         {
-            System.out.println("Quantity is already increasing");
+            System.out.println("ReasoningStuff.Quantity is already increasing");
         }
     }
     void decreaseDerivative()
@@ -59,7 +61,7 @@ abstract class Quantity
         }
         else
         {
-            System.out.println("Quantity is already decreasing");
+            System.out.println("ReasoningStuff.Quantity is already decreasing");
         }
     }
 

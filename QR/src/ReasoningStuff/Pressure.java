@@ -1,6 +1,8 @@
-class Height extends Quantity
+package ReasoningStuff;
+
+class Pressure extends Quantity
 {
-    public Height(String magnitude, int quantitySpaceLength)
+    public Pressure(String magnitude, int quantitySpaceLength)
     {
         this.setQuantitySpace(quantitySpaceLength);
         this.setDerivativeSpace();
@@ -8,7 +10,7 @@ class Height extends Quantity
         this.setDerivative("0");
     }
 
-    public Height(String magnitude)
+    public Pressure(String magnitude)
     {
         int quantitySpaceLength = 3;
         this.setQuantitySpace(quantitySpaceLength);
@@ -19,6 +21,6 @@ class Height extends Quantity
 
     public String toString()
     {
-        return ("Height:\t \t" + this.getMagnitude() + "\t" + this.getDerivative() + "\n");
+        return ("Pressure: \t" + this.getMagnitude() + "\t" + this.getDerivative() + "\n");
     }
 }
