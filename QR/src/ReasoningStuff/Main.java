@@ -3,6 +3,9 @@ package ReasoningStuff;
 import TreeStuff.Node;
 import TreeStuff.Tree;
 
+import java.util.Optional;
+import java.util.ArrayList;
+
 class Main
 {
     static Dependencies dp;
@@ -37,16 +40,19 @@ class Main
      */
     private static void runDependencies(Node node)
     {
-				dp.processDerivatives(node)
-                .ifPresent(state->
-                {
-                    System.out.println("derivative processed on state: ");
-                    System.out.println(node.toString());
-                    myTree.addChild(node, state);
-                    System.out.println("Child:");
-                    System.out.println(node.getChildren().get(node.getChildren().size()-1).toString());
-                    runDependencies(node.getChildren().get(node.getChildren().size()-1));
-                });
+				ArrayList<Optional<State>> nextStates = dp.processDerivatives(node);
+
+				for(Optional<State> optState: nextStates)
+						optState.ifPresent(state->
+										 {
+												 System.out.println("derivative op de onderstaande node: ");
+												 System.out.println(node.toString());
+												 myTree.addChild(node, state);
+												 System.out.println("Child:");
+												 System.out.println(node.getChildren().get(node.getChildren().size()-1).toString());
+												 runDependencies(node.getChildren().get(node.getChildren().size()-1));
+										 });
+				
 				dp.influencePos(node)
                 .ifPresent(state->
                 {

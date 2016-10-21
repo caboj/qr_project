@@ -3,6 +3,7 @@ package ReasoningStuff;
 import TreeStuff.Node;
 
 import java.util.Optional;
+import java.util.ArrayList;
 
 @SuppressWarnings("DanglingJavadoc")
 class Dependencies
@@ -12,13 +13,51 @@ class Dependencies
 		/**
 		 * If derivative is not 0 then do something
 		 */
-		Optional<State> processDerivatives(Node node)
+		ArrayList<Optional<State>> processDerivatives(Node node)
     {
+				ArrayList<Optional<State>> nextStates = new ArrayList<Optional<State>>();
 				if (node.getData().inflow.getDerivative().equalsIgnoreCase("+"))
         {
-            return this.increaseMagnitude(node, "inflow");
+            nextStates.add(this.increaseMagnitude(node, "inflow"));
         }
-        return Optional.empty();
+				if (node.getData().volume.getDerivative().equalsIgnoreCase("+"))
+        {
+            nextStates.add(this.increaseMagnitude(node, "volume"));
+        }
+				if (node.getData().height.getDerivative().equalsIgnoreCase("+"))
+        {
+            nextStates.add(this.increaseMagnitude(node, "height"));
+        }
+				if (node.getData().pressure.getDerivative().equalsIgnoreCase("+"))
+        {
+            nextStates.add(this.increaseMagnitude(node, "pressure"));
+        }
+				if (node.getData().outflow.getDerivative().equalsIgnoreCase("+"))
+        {
+            nextStates.add(this.increaseMagnitude(node, "outflow"));
+        }
+				if (node.getData().inflow.getDerivative().equalsIgnoreCase("-"))
+        {
+            nextStates.add(this.decreaseMagnitude(node, "inflow"));
+        }
+				if (node.getData().volume.getDerivative().equalsIgnoreCase("-"))
+        {
+            nextStates.add(this.decreaseMagnitude(node, "volume"));
+        }
+				if (node.getData().height.getDerivative().equalsIgnoreCase("-"))
+        {
+            nextStates.add(this.decreaseMagnitude(node, "height"));
+        }
+				if (node.getData().pressure.getDerivative().equalsIgnoreCase("-"))
+        {
+            nextStates.add(this.decreaseMagnitude(node, "pressure"));
+        }
+				if (node.getData().outflow.getDerivative().equalsIgnoreCase("-"))
+        {
+            nextStates.add(this.decreaseMagnitude(node, "outflow"));
+        }
+
+        return nextStates;
     }
 
 		
