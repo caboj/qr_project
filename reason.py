@@ -43,9 +43,14 @@ def main():
     
     # states are represented as dict
     states = next_states({'inflow':'+','outflow':'0','volume':'0','height':'0','pressure':'0'})
-    print(states)
+    for state in states:
+        print_state(state)
 
-
+def print_state(state):
+    print('--  state --')
+    for q,v in state.items():
+       print(' %s: \t%s'%(q,v) 
+        
     
 if __name__ == '__main__':
     main()

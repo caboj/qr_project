@@ -37,7 +37,17 @@ class Main
      */
     private static void runDependencies(Node node)
     {
-        dp.influencePos(node)
+				dp.processDerivatives(node)
+                .ifPresent(state->
+                {
+                    System.out.println("derivative processed on state: ");
+                    System.out.println(node.toString());
+                    myTree.addChild(node, state);
+                    System.out.println("Child:");
+                    System.out.println(node.getChildren().get(node.getChildren().size()-1).toString());
+                    runDependencies(node.getChildren().get(node.getChildren().size()-1));
+                });
+				dp.influencePos(node)
                 .ifPresent(state->
                 {
                     System.out.println("I+ op de onderstaande node: ");

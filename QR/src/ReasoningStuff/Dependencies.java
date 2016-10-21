@@ -9,7 +9,19 @@ class Dependencies
 {
 
     //daarnaast missen interne dependencies. Zo als als de derivative increasing is, dan moet the magnitude ook increasen. Zou je die ook kunnen implementeren aub?
+		/**
+		 * If derivative is not 0 then do something
+		 */
+		Optional<State> processDerivatives(Node node)
+    {
+				if (node.getData().inflow.getDerivative().equalsIgnoreCase("+"))
+        {
+            return this.increaseMagnitude(node, "inflow");
+        }
+        return Optional.empty();
+    }
 
+		
     /**
      * The amount of inflow increases the volume of water in the tub
      * @param node Node with start state as node.getData()
@@ -22,7 +34,7 @@ class Dependencies
     {
         if (node.getData().inflow.getMagnitude().equalsIgnoreCase("+"))
         {
-            return this.increaseMagnitude(node, "volume");
+            return this.increaseDerivative(node, "volume");
         }
         return Optional.empty();
     }
@@ -39,7 +51,7 @@ class Dependencies
     {
         if (node.getData().outflow.getMagnitude().equalsIgnoreCase("+"))
         {
-            return this.decreaseMagnitude(node, "volume");
+            return this.decreaseDerivative(node, "volume");
         }
         return Optional.empty();
     }
