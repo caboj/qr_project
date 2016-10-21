@@ -22,7 +22,7 @@ public class State
         this.pressure = new Pressure(parameters[4][0],parameters[4][1],0);
     }
 
-    private String[][] getParameters()
+    public String[][] getParameters()
     {
         return new String [][] {
                 { inflow.getMagnitude(), inflow.getDerivative()},

@@ -40,91 +40,16 @@ class Main
      */
     private static void runDependencies(Node node)
     {
-				ArrayList<Optional<State>> nextStates = dp.processDerivatives(node);
-
-				for(Optional<State> optState: nextStates)
-						optState.ifPresent(state->
-										 {
-												 System.out.println("derivative op de onderstaande node: ");
-												 System.out.println(node.toString());
-												 myTree.addChild(node, state);
-												 System.out.println("Child:");
-												 System.out.println(node.getChildren().get(node.getChildren().size()-1).toString());
-												 runDependencies(node.getChildren().get(node.getChildren().size()-1));
-										 });
+				State state = dp.processDerivatives(node.getData());
+				state = setValueCorrespondenceAndDependencies(state);
+				myTree.addChild(node,state);
 				
-				dp.influencePos(node)
-                .ifPresent(state->
-                {
-                    System.out.println("I+ op de onderstaande node: ");
-                    System.out.println(node.toString());
-                    myTree.addChild(node, state);
-                    System.out.println("Child:");
-                    System.out.println(node.getChildren().get(node.getChildren().size()-1).toString());
-                    runDependencies(node.getChildren().get(node.getChildren().size()-1));
-                });
-        dp.influenceNeg(node)
-                .ifPresent(state ->
-                {
-                    System.out.println("I- op start node: ");
-                    System.out.println(node.toString());
-                    myTree.addChild(node, state);
-                    System.out.println("Child:");
-                    System.out.println(node.getChildren().get(node.getChildren().size()-1).toString());
-                    runDependencies(node.getChildren().get(node.getChildren().size()-1));
-                });
-        dp.VC(node)
-                .ifPresent(state->
-                {
-                    System.out.println("VC op start node: ");
-                    System.out.println(node.toString());
-                    myTree.addChild(node, state);
-                    System.out.println("Child:");
-                    System.out.println(node.getChildren().get(node.getChildren().size()-1).toString());
-                    runDependencies(node.getChildren().get(node.getChildren().size()-1));
-                }
-                );
-    }
+		}
 
-    /**
-     * Test case for the tree class
-     */
-    private static void testTree()
-    {
-        String[][] parameters = new String [][] {
-                { "+", "0"},
-                { "+", "0"},
-                { "0", "0"},
-                { "0", "0"},
-                { "0", "0"} };
-
-        String[][] parametersChild = new String [][] {
-                { "+", "1"},
-                { "+", "1"},
-                { "+", "1"},
-                { "+", "1"},
-                { "+", "1"} };
-
-        State startState = new State(parameters);
-        State childState = new State(parametersChild);
-        State childState2 = new State(parametersChild);
-
-        State childState11 = new State(parameters);
-
-        Node childNode = myTree.addChild(myTree.getRoot(), childState);
-        Node childNode2 = myTree.addChild(myTree.getRoot(), childState2);
-
-        Node childChildNode = myTree.addChild(childNode, childState11);
-        myTree.addChild(childNode2, childState11);
-        myTree.addChild(childNode2, childState);
-
-        myTree.addChild(childNode, childState);
-        myTree.addChild(childNode, startState);
-        myTree.addChild(childNode, childState);
-
-        myTree.printTreeByName(myTree.getRoot(), " ");
-        System.out.println();
-        myTree.printTree(myTree.getRoot(),"\t");
-
-    }
+		private static State setValueCorrespondenceAndDependencies(State state){
+				state = dp.setVCs(state);
+				state = dp.setProportionals(state);
+				return state;
+		}
+				
 }

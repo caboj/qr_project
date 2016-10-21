@@ -49,7 +49,7 @@ def main():
 def print_state(state):
     print('--  state --')
     for q,v in state.items():
-       print(' %s: \t%s'%(q,v) 
+       print(' %s: \t%s'%(q,v)) 
         
     
 if __name__ == '__main__':
