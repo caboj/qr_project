@@ -1,8 +1,8 @@
-package TreeStuff;
+package nl.uva.qr.tree;
 
 import java.util.ArrayList;
 import java.util.List;
-import ReasoningStuff.State;
+import nl.uva.qr.reasoning.State;
 
 public class Node
 {
