@@ -1,34 +1,35 @@
 package nl.uva.qr.reasoning;
 
-abstract class Quantity
+public class Quantity
 {
-    private Magnitude magnitude;
-    private Derivative derivative;
+    private final QuantityType type;
+    private final Magnitude magnitude;
+    private final Derivative derivative;
 
-    public Quantity(Magnitude magnitude, Derivative derivative)
+    public Quantity(QuantityType type, Magnitude magnitude, Derivative derivative)
     {
+        this.type = type;
         this.derivative = derivative;
         this.magnitude = magnitude;
     }
 
-    void increaseMagnitude()
+    Quantity increaseMagnitude()
     {
-        magnitude = magnitude.getNextFor(this);
+        return new Quantity(this.type, this.magnitude.getNextFor(this.type), this.derivative);
     }
 
-    void decreaseMagnitude()
+    Quantity decreaseMagnitude()
     {
-        magnitude = magnitude.getPrevious();
+        return new Quantity(this.type, this.magnitude.getPrevious(), this.derivative);    }
+
+    Quantity increaseDerivative()
+    {
+        return new Quantity(this.type, this.magnitude, this.derivative.getNext());
     }
 
-    void increaseDerivative()
+    Quantity decreaseDerivative()
     {
-        this.derivative = this.derivative.getNext();
-    }
-
-    void decreaseDerivative()
-    {
-        this.derivative = this.derivative.getPrevious();
+        return new Quantity(this.type, this.magnitude, this.derivative.getPrevious());
     }
 
     Magnitude getMagnitude()
@@ -36,18 +37,13 @@ abstract class Quantity
         return magnitude;
     }
 
-    void setMagnitude(Magnitude magnitude)
-    {
-        this.magnitude = magnitude;
-    }
-
     Derivative getDerivative()
     {
         return derivative;
     }
 
-    void setDerivative(Derivative derivative)
+    public String toString()
     {
-        this.derivative = derivative;
+        return (type + ": \t" + this.getMagnitude().getSymbol() + "\t" + this.getDerivative().getSymbol() + "\n");
     }
 }

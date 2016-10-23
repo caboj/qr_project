@@ -3,6 +3,8 @@ package nl.uva.qr.reasoning;
 import nl.uva.qr.tree.Node;
 import nl.uva.qr.tree.Tree;
 
+import java.util.Optional;
+
 class Main
 {
     static Dependencies dp;
@@ -12,29 +14,52 @@ class Main
     {
         dp = new Dependencies();
         myTree = new Tree(State.builder()
-                .withInflow(new Inflow(Magnitude.OFF, Derivative.INCREASING))
-                .withOutflow(new Outflow(Magnitude.OFF, Derivative.STABLE))
-                .withVolume(new Volume(Magnitude.OFF, Derivative.STABLE))
-                .withHeight(new Height(Magnitude.OFF, Derivative.STABLE))
-                .withPressure(new Pressure(Magnitude.OFF, Derivative.STABLE))
+                .withInflow(new Quantity(QuantityType.INFLOW, Magnitude.POSITIVE, Derivative.INCREASING))
+                .withOutflow(new Quantity(QuantityType.OUTFLOW, Magnitude.OFF, Derivative.STABLE))
+                .withVolume(new Quantity(QuantityType.VOLUME, Magnitude.OFF, Derivative.STABLE))
+                .withHeight(new Quantity(QuantityType.HEIGHT, Magnitude.POSITIVE, Derivative.INCREASING))
+                .withPressure(new Quantity(QuantityType.PRESSURE,Magnitude.OFF, Derivative.STABLE))
                 .build());
 
 
-        //System.out.println("Start tree met alleen onderstaande root:");
-        //myTree.printTree(myTree.getRoot(), "\t");
-        //System.out.println("---------------------");
+        System.out.println("Start tree met alleen onderstaande root:");
+        myTree.printTree(myTree.getRoot());
+        System.out.println("---------------------");
+
         runDependencies(myTree.getRoot());
-        //System.out.println("---------------------");
-        //System.out.println("Tree na het uitvoeren van alle dependencies op de root node:");
-        //myTree.printTree(myTree.getRoot(), " ");
+        System.out.println("---------------------");
+        System.out.println("Tree na het uitvoeren van alle dependencies op de root node:");
+        myTree.printTree(myTree.getRoot());
     }
 
+    private static void runDependencies(final Node node)
+    {
+        /*dp.processDerivatives(node).ifPresent(state->
+        {
+            System.out.println("Derivatives toegepast op de onderstaande node: ");
+            System.out.println(node.toString());
+            myTree.addChild(node, state);
+            System.out.println("Child:");
+            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
+        });*/
+
+        dp.influencePos(node).ifPresent(state ->
+        {
+            System.out.println("I+ op de onderstaande node: ");
+            System.out.println(node.toString());
+            myTree.addChild(node, state);
+            System.out.println("Child:");
+            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
+            //runDependencies(node.getChildren().get(node.getChildren().size() - 1));
+        });
+
+    }
     /***
      * The dependencies are runned depth first.
      * Every new state is added as a child and all the dependencies are called again.
      * @param node Start node to run dependencies on.
      */
-    private static void runDependencies(Node node)
+    /*private static void runDependencies(Node node)
     {
         dp.processDerivatives(node).forEach(state ->
         {
@@ -43,8 +68,10 @@ class Main
             myTree.addChild(node, state);
             System.out.println("Child:");
             System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-            runDependencies(node.getChildren().get(node.getChildren().size() - 1));
+            //runDependencies(node.getChildren().get(node.getChildren().size() - 1));
         });
+
+
         dp.influencePos(node)
                 .ifPresent(state ->
                 {
@@ -53,7 +80,7 @@ class Main
                     myTree.addChild(node, state);
                     System.out.println("Child:");
                     System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-                    runDependencies(node.getChildren().get(node.getChildren().size() - 1));
+                    //runDependencies(node.getChildren().get(node.getChildren().size() - 1));
                 });
         dp.influenceNeg(node)
                 .ifPresent(state ->
@@ -63,7 +90,7 @@ class Main
                     myTree.addChild(node, state);
                     System.out.println("Child:");
                     System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-                    runDependencies(node.getChildren().get(node.getChildren().size() - 1));
+                    //runDependencies(node.getChildren().get(node.getChildren().size() - 1));
                 });
         dp.VC(node)
                 .ifPresent(state ->
@@ -73,59 +100,45 @@ class Main
                     myTree.addChild(node, state);
                     System.out.println("Child:");
                     System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-                    runDependencies(node.getChildren().get(node.getChildren().size() - 1));
+                    //runDependencies(node.getChildren().get(node.getChildren().size() - 1));
                 });
-    }
+    }*/
 
     /**
      * Test case for the tree class
      */
     private static void testTree()
     {
-        String[][] parameters = new String[][]{
-                {"+", "0"},
-                {"+", "0"},
-                {"0", "0"},
-                {"0", "0"},
-                {"0", "0"}};
-
-        String[][] parametersChild = new String[][]{
-                {"+", "1"},
-                {"+", "1"},
-                {"+", "1"},
-                {"+", "1"},
-                {"+", "1"}};
-
         State startState = State.builder()
-                .withInflow(new Inflow(Magnitude.POSITIVE, Derivative.STABLE))
-                .withOutflow(new Outflow(Magnitude.POSITIVE, Derivative.STABLE))
-                .withVolume(new Volume(Magnitude.OFF, Derivative.STABLE))
-                .withHeight(new Height(Magnitude.OFF, Derivative.STABLE))
-                .withPressure(new Pressure(Magnitude.OFF, Derivative.STABLE))
+                .withInflow(new Quantity(QuantityType.INFLOW,Magnitude.POSITIVE, Derivative.STABLE))
+                .withOutflow(new Quantity(QuantityType.OUTFLOW, Magnitude.POSITIVE, Derivative.STABLE))
+                .withVolume(new Quantity(QuantityType.VOLUME, Magnitude.OFF, Derivative.STABLE))
+                .withHeight(new Quantity(QuantityType.HEIGHT, Magnitude.OFF, Derivative.STABLE))
+                .withPressure(new Quantity(QuantityType.PRESSURE, Magnitude.OFF, Derivative.STABLE))
                 .build();
 
         State childState = State.builder()
-                .withInflow(new Inflow(Magnitude.POSITIVE, Derivative.INCREASING))
-                .withOutflow(new Outflow(Magnitude.POSITIVE, Derivative.INCREASING))
-                .withVolume(new Volume(Magnitude.OFF, Derivative.INCREASING))
-                .withHeight(new Height(Magnitude.OFF, Derivative.INCREASING))
-                .withPressure(new Pressure(Magnitude.OFF, Derivative.INCREASING))
+                .withInflow(new Quantity(QuantityType.INFLOW, Magnitude.POSITIVE, Derivative.INCREASING))
+                .withOutflow(new Quantity(QuantityType.OUTFLOW, Magnitude.POSITIVE, Derivative.INCREASING))
+                .withVolume(new Quantity(QuantityType.VOLUME, Magnitude.OFF, Derivative.INCREASING))
+                .withHeight(new Quantity(QuantityType.HEIGHT, Magnitude.OFF, Derivative.INCREASING))
+                .withPressure(new Quantity(QuantityType.PRESSURE, Magnitude.OFF, Derivative.INCREASING))
                 .build();
 
         State childState2 = State.builder()
-                .withInflow(new Inflow(Magnitude.POSITIVE, Derivative.INCREASING))
-                .withOutflow(new Outflow(Magnitude.POSITIVE, Derivative.INCREASING))
-                .withVolume(new Volume(Magnitude.OFF, Derivative.INCREASING))
-                .withHeight(new Height(Magnitude.OFF, Derivative.INCREASING))
-                .withPressure(new Pressure(Magnitude.OFF, Derivative.INCREASING))
+                .withInflow(new Quantity(QuantityType.INFLOW, Magnitude.POSITIVE, Derivative.INCREASING))
+                .withOutflow(new Quantity(QuantityType.OUTFLOW, Magnitude.POSITIVE, Derivative.INCREASING))
+                .withVolume(new Quantity(QuantityType.VOLUME, Magnitude.OFF, Derivative.INCREASING))
+                .withHeight(new Quantity(QuantityType.HEIGHT, Magnitude.OFF, Derivative.INCREASING))
+                .withPressure(new Quantity(QuantityType.PRESSURE, Magnitude.OFF, Derivative.INCREASING))
                 .build();
 
         State childState11 = State.builder()
-                .withInflow(new Inflow(Magnitude.POSITIVE, Derivative.STABLE))
-                .withOutflow(new Outflow(Magnitude.POSITIVE, Derivative.STABLE))
-                .withVolume(new Volume(Magnitude.OFF, Derivative.STABLE))
-                .withHeight(new Height(Magnitude.OFF, Derivative.STABLE))
-                .withPressure(new Pressure(Magnitude.OFF, Derivative.STABLE))
+                .withInflow(new Quantity(QuantityType.INFLOW,Magnitude.POSITIVE, Derivative.STABLE))
+                .withOutflow(new Quantity(QuantityType.OUTFLOW, Magnitude.POSITIVE, Derivative.STABLE))
+                .withVolume(new Quantity(QuantityType.VOLUME, Magnitude.OFF, Derivative.STABLE))
+                .withHeight(new Quantity(QuantityType.HEIGHT, Magnitude.OFF, Derivative.STABLE))
+                .withPressure(new Quantity(QuantityType.PRESSURE, Magnitude.OFF, Derivative.STABLE))
                 .build();
 
         Node childNode = myTree.addChild(myTree.getRoot(), childState);
@@ -141,6 +154,6 @@ class Main
 
         myTree.printTreeByName(myTree.getRoot(), " ");
         System.out.println();
-        myTree.printTree(myTree.getRoot(), "\t");
+        myTree.printTree(myTree.getRoot());
     }
 }

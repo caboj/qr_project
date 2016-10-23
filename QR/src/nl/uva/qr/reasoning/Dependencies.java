@@ -5,61 +5,21 @@ import nl.uva.qr.tree.Node;
 import java.util.Optional;
 import java.util.ArrayList;
 
-@SuppressWarnings("DanglingJavadoc")
-class Dependencies
+public class Dependencies
 {
     /**
-     * If derivative is not 0 then do something
+     * Twee soorten invloeden:
+     * 1 - Aan de hand van de derivatives eigen magnitudes veranderen (state "rechttrekken")
+     * 2 - aan de hand van de dependencies de derivatives of magnitudes veranderen
+     *
+     * We beginnen met eigen states netjes "rechttrekken" en die in de tree opslaan. Dat is een state!
      */
-    ArrayList<State> processDerivatives(Node node)
-    {
-        ArrayList<State> nextStates = new ArrayList<>();
 
-        if (node.getData().inflow.getDerivative().isIncreasing())
-        {
-            this.increaseMagnitude(node, "inflow").ifPresent(nextStates::add);
-        }
-        if (node.getData().volume.getDerivative().isIncreasing())
-        {
-            this.increaseMagnitude(node, "volume").ifPresent(nextStates::add);
-        }
-        if (node.getData().height.getDerivative().isIncreasing())
-        {
-            this.increaseMagnitude(node, "height").ifPresent(nextStates::add);
-        }
-        if (node.getData().pressure.getDerivative().isIncreasing())
-        {
-            this.increaseMagnitude(node, "pressure").ifPresent(nextStates::add);
-        }
-        if (node.getData().outflow.getDerivative().isIncreasing())
-        {
-            this.increaseMagnitude(node, "outflow").ifPresent(nextStates::add);
-        }
-        if (node.getData().inflow.getDerivative().isDecreasing())
-        {
-            this.decreaseMagnitude(node, "inflow").ifPresent(nextStates::add);
-        }
-        if (node.getData().volume.getDerivative().isDecreasing())
-        {
-            this.decreaseMagnitude(node, "volume").ifPresent(nextStates::add);
-        }
-        if (node.getData().height.getDerivative().isDecreasing())
-        {
-            this.decreaseMagnitude(node, "height").ifPresent(nextStates::add);
-        }
-        if (node.getData().pressure.getDerivative().isDecreasing())
-        {
-            this.decreaseMagnitude(node, "pressure").ifPresent(nextStates::add);
-        }
-        if (node.getData().outflow.getDerivative().isDecreasing())
-        {
-            this.decreaseMagnitude(node, "outflow").ifPresent(nextStates::add);
-        }
-        return nextStates;
-    }
+
 
     /**
-     * The amount of inflow increases the volume of water in the tub
+     * I+(Inflow, Volume)
+     * The amount of inflow increases the volume of water in the tub (magnitude van inflow -> derivative Volume)
      *
      * @param node Node with start state as node.getData()
      * @return Returns an Optional<State>, means if there are changes,
@@ -70,225 +30,70 @@ class Dependencies
     {
         if (node.getData().inflow.getMagnitude() == Magnitude.POSITIVE)
         {
-            return this.increaseDerivative(node, "volume");
-        }
-        return Optional.empty();
-    }
+            State.Builder builder = node.getData().builder().copyOf(node.getData());
+            builder.withVolume(node.getData().volume.increaseDerivative());
 
-    /**
-     * The amount of outflow decreases the volume of water in the tub
-     *
-     * @param node Node with start state as node.getData()
-     * @return Returns an Optional<State>, means if there are changes,
-     * it returns an optional with a new derived state in it.
-     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
-     */
-    Optional<State> influenceNeg(Node node)
-    {
-        if (node.getData().outflow.getMagnitude() == Magnitude.POSITIVE)
-        {
-            return this.decreaseDerivative(node, "volume");
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * P+(Volume, Outflow)  - outflow changes are proportional to volume changes
-     * P+(Volume, nl.uva.qr.reasoning.Height)   - height changes are proportional to volume changes
-     * P+(nl.uva.qr.reasoning.Height, Pressure) - pressure changes are proportional to height changes
-     */
-    // Jacob, ik weet niet zeker of de methode implementatie correct is. Wil je naar dee methode kijken aub?
-    // Dit moet echt wel gesplits worden, aangezien het proportional invloed heeft en dus stap voor stap moet gebeuren...
-    Optional<State> proportionalityPos(Node node)
-    {
-        if (node.getData().volume.getDerivative().isDecreasing())
-        {
-            this.decreaseDerivative(node, "outflow");
-            this.decreaseDerivative(node, "height");
-        } else if (node.getData().volume.getDerivative().isIncreasing())
-        {
-            this.increaseDerivative(node, "outflow");
-            this.increaseDerivative(node, "height");
-        } else
-        {
-            System.out.println("Volume isn't changing");
-        }
-
-        if (node.getData().height.getDerivative().isDecreasing())
-        {
-            this.decreaseDerivative(node, "pressure");
-        } else if (node.getData().height.getDerivative().isIncreasing())
-        {
-            this.increaseDerivative(node, "pressure");
-        } else
-        {
-            System.out.println("nl.uva.qr.reasoning.Height isn't changing");
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * The outflow is at its highest value (max), when the volume is at it highest value.
-     * <p>
-     * But, outflow can't increase to the "MAX" at once if it was "0", it has to become "+" first,
-     * because of the domain {0,+,MAX}. And that means a (very short) new state.
-     * After every new state all the dependencies have to be applied to the new state.
-     * That is why this method is not recursive.
-     *
-     * @param node Node with start state as node.getData()
-     * @return Returns an Optional<State>, means if there are changes,
-     * it returns an optional with a new derived state in it.
-     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
-     */
-    private Optional<State> maxVC(Node node)
-    {
-        return this.increaseMagnitude(node, "outflow");
-    }
-
-    /**
-     * There is no outflow, when there is no volume.
-     * <p>
-     * But, outflow can't decrease to the "0" at once if it was "MAX", it has to become "+" first,
-     * because of the domain {0,+,MAX}. And that means a (very short) new state.
-     * After every new state all the dependencies have to be applied to the new state.
-     * That is why this method is not recursive.
-     *
-     * @param node Node with start state as node.getData()
-     * @return Returns an Optional<State>, means if there are changes,
-     * it returns an optional with a new derived state in it.
-     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
-     */
-    private Optional<State> zeroVC(Node node)
-    {
-        return this.decreaseMagnitude(node, "outflow");
-    }
-
-
-    /**************************** Help methods ********************************************/
-
-    /**
-     * Additional method to decide which of the two VC methods to call.
-     *
-     * @param node Node with start state as node.getData()
-     */
-    Optional<State> VC(Node node)
-    {
-        if (node.getData().volume.getMagnitude() == Magnitude.MAX)
-        {
-            return maxVC(node);
-        } else if (node.getData().volume.getMagnitude() == Magnitude.OFF)
-        {
-            return zeroVC(node);
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Four methods to increase and decrease Magnitude and Derivative of each quantity in general.
-     *
-     * @param node     Node with start state as node.getData()
-     * @param quantity Quantity with has to be increased or decreased
-     * @return Returns an Optional<State>, means if there are changes,
-     * it returns an optional with a new derived state in it.
-     * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
-     */
-    private Optional<State> increaseMagnitude(Node node, String quantity)
-    {
-        State nextState = node.getData().builder().copyOf(node.getData());
-        switch (quantity)
-        {
-            case "inflow":
-                nextState.inflow.increaseMagnitude();
-                break;
-            case "outflow":
-                nextState.outflow.increaseMagnitude();
-                break;
-            case "volume":
-                nextState.volume.increaseMagnitude();
-                break;
-            case "height":
-                nextState.height.increaseMagnitude();
-                break;
-        }
-        if (!nextState.equals(node.getData()))
-        {
+            State nextState = builder.build();
             return Optional.of(nextState);
         }
         return Optional.empty();
     }
 
-    private Optional<State> decreaseMagnitude(Node node, String quantity)
+    Optional<State>  processDerivatives(Node node)
     {
-        State nextState = node.getData().builder().copyOf(node.getData());
-        switch (quantity)
-        {
-            case "inflow":
-                nextState.inflow.decreaseMagnitude();
-                break;
-            case "outflow":
-                nextState.outflow.decreaseMagnitude();
-                break;
-            case "volume":
-                nextState.volume.decreaseMagnitude();
-                break;
-            case "height":
-                nextState.height.decreaseMagnitude();
-                break;
-        }
-        if (!nextState.equals(node.getData()))
-        {
-            return Optional.of(nextState);
-        }
-        return Optional.empty();
-    }
+        State.Builder builder = node.getData().builder().copyOf(node.getData());
 
-    private Optional<State> increaseDerivative(Node node, String quantity)
-    {
-        State nextState = node.getData().builder().copyOf(node.getData());
-        switch (quantity)
+        switch (node.getData().inflow.getDerivative())
         {
-            case "inflow":
-                nextState.inflow.increaseDerivative();
+            case INCREASING:
+                builder.withInflow(node.getData().inflow.increaseMagnitude());
                 break;
-            case "outflow":
-                nextState.outflow.increaseDerivative();
-                break;
-            case "volume":
-                nextState.volume.increaseDerivative();
-                break;
-            case "height":
-                nextState.height.increaseDerivative();
+            case DECREASING:
+                builder.withInflow(node.getData().inflow.decreaseMagnitude());
                 break;
         }
-        if (!nextState.equals(node.getData()))
+        switch ((node.getData().outflow.getDerivative()))
         {
-            return Optional.of(nextState);
+            case INCREASING:
+                builder.withOutflow(node.getData().outflow.increaseMagnitude());
+                break;
+            case DECREASING:
+                builder.withOutflow(node.getData().outflow.decreaseMagnitude());
+                break;
         }
-        return Optional.empty();
-    }
+        switch ((node.getData().volume.getDerivative()))
+        {
+            case INCREASING:
+                builder.withVolume(node.getData().volume.increaseMagnitude());
+                break;
+            case DECREASING:
+                builder.withVolume(node.getData().volume.decreaseMagnitude());
+                break;
+        }
+        switch ((node.getData().height.getDerivative()))
+        {
+            case INCREASING:
+                builder.withHeight(node.getData().height.increaseMagnitude());
+                break;
+            case DECREASING:
+                builder.withHeight(node.getData().height.decreaseMagnitude());
+                break;
+        }
+        switch ((node.getData().pressure.getDerivative()))
+        {
+            case INCREASING:
+                builder.withPressure(node.getData().pressure.increaseMagnitude());
+                break;
+            case DECREASING:
+                builder.withPressure(node.getData().pressure.decreaseMagnitude());
+                break;
+        }
+        State nextState = builder.build();
 
-    private Optional<State> decreaseDerivative(Node node, String quantity)
-    {
-        State nextState = node.getData().builder().copyOf(node.getData());
-        switch (quantity)
+        if(node.getData().equals(nextState))
         {
-            case "inflow":
-                nextState.inflow.decreaseDerivative();
-                break;
-            case "outflow":
-                nextState.outflow.decreaseDerivative();
-                break;
-            case "volume":
-                nextState.volume.decreaseDerivative();
-                break;
-            case "height":
-                nextState.height.decreaseDerivative();
-                break;
+            return Optional.empty();
         }
-        if (!nextState.equals(node.getData()))
-        {
-            return Optional.of(nextState);
-        }
-        return Optional.empty();
+        return Optional.of(nextState);
     }
 }

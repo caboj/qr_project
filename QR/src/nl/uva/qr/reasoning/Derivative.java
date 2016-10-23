@@ -2,27 +2,31 @@ package nl.uva.qr.reasoning;
 
 enum Derivative
 {
-    DECREASING,
-    STABLE,
-    INCREASING;
+    DECREASING("-"),
+    STABLE("0"),
+    INCREASING("+");
 
-    private String symbol;
+    private final String symbol;
     private Derivative next;
     private Derivative previous;
 
     static
     {
-        DECREASING.symbol = "-";
         DECREASING.next = STABLE;
         DECREASING.previous = DECREASING;
 
-        STABLE.symbol = "0";
         STABLE.next = INCREASING;
         STABLE.previous = DECREASING;
 
-        INCREASING.symbol = "+";
         INCREASING.next = INCREASING;
         INCREASING.previous = STABLE;
+    }
+
+
+
+    Derivative(String symbol)
+    {
+        this.symbol = symbol;
     }
 
     public String getSymbol()

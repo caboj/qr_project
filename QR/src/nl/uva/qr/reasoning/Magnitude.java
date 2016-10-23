@@ -7,28 +7,32 @@ import com.sun.org.apache.bcel.internal.generic.NEW;
  */
 enum Magnitude
 {
-    OFF,
-    POSITIVE,
-    MAX;
+    OFF("0"),
+    POSITIVE("+"),
+    MAX("MAX");
 
-    private String symbol;
+
+    private final String symbol;
     private Magnitude next;
     private Magnitude previous;
 
     static
     {
-        OFF.symbol = "0";
         OFF.next = POSITIVE;
         OFF.previous = OFF;
 
-        POSITIVE.symbol = "+";
         POSITIVE.next = MAX;
         POSITIVE.previous = OFF;
 
-        MAX.symbol = "MAX";
         MAX.next = MAX;
         MAX.previous = POSITIVE;
 
+    }
+
+
+    Magnitude(String symbol)
+    {
+        this.symbol = symbol;
     }
 
     public String getSymbol()
@@ -36,7 +40,7 @@ enum Magnitude
         return symbol;
     }
 
-    public Magnitude getNext()
+    private Magnitude getNext()
     {
         return next;
     }
@@ -46,9 +50,9 @@ enum Magnitude
         return previous;
     }
 
-    public Magnitude getNextFor(Quantity quantity)
+    public Magnitude getNextFor(QuantityType type)
     {
-        if (quantity instanceof Inflow && this == POSITIVE)
+        if(type==QuantityType.INFLOW && this==POSITIVE)
         {
             return POSITIVE;
         }

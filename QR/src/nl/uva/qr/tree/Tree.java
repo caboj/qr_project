@@ -8,9 +8,8 @@ public class Tree<T>
 
     public Tree(State rootData)
     {
-        root = new Node(null);
+        root = new Node(null, rootData);
         root.setId(0);
-        root.setData(rootData);
     }
 
     public Node getRoot()
@@ -28,8 +27,7 @@ public class Tree<T>
         String sb = String.valueOf(parent.getId()) +
                 (parent.getChildren().size() + 1);
 
-        Node node = new Node(parent);
-        node.setData(data);
+        Node node = new Node(parent, data);
         node.setId(Integer.parseInt(sb));
         parent.getChildren().add(node);
 
@@ -52,16 +50,12 @@ public class Tree<T>
         }
     }
 
-    public void printTree(Node node, String appender)
+    public void printTree(Node node)
     {
-
-        /*System.out.println(myTree.getRootData().toString());
-        for (Node curr:myTree.getRoot().getChildren())
-        {
-            System.out.println(curr.toString());
-        }
-        */
-
+        printTree(node, "\t");
+    }
+    private void printTree(Node node, String appender)
+    {
         for (String curr : node.toString().split("\n"))
         {
             if (node.getParent() == null)

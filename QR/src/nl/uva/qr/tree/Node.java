@@ -6,15 +6,16 @@ import nl.uva.qr.reasoning.State;
 
 public class Node
 {
-    private State data;
+    private final State data;
     private String name;
     private int id;
     private List<Node> children;
     private final Node parent;
 
-    public Node(Node parent)
+    public Node(Node parent, State data)
     {
         this.parent = parent;
+        this.data = data;
         this.name = "q";
         this.children = new ArrayList<>();
 
@@ -39,11 +40,6 @@ public class Node
     public State getData()
     {
         return data;
-    }
-
-    void setData(State data)
-    {
-        this.data = data;
     }
 
 

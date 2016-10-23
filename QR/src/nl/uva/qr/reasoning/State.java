@@ -6,11 +6,11 @@ import java.time.OffsetDateTime;
 
 public class State
 {
-    final Inflow inflow;
-    final Outflow outflow;
-    final Volume volume;
-    final Height height;
-    final Pressure pressure;
+    final Quantity inflow;
+    final Quantity outflow;
+    final Quantity volume;
+    final Quantity height;
+    final Quantity pressure;
 
     /**
      *
@@ -22,7 +22,7 @@ public class State
      *
      *
      */
-    private State(Inflow inflow, Outflow outflow, Volume volume, Height height, Pressure pressure)
+    private State(Quantity inflow, Quantity outflow, Quantity volume, Quantity height, Quantity pressure)
     {
         this.inflow = inflow;
         this.outflow = outflow;
@@ -38,42 +38,48 @@ public class State
 
     public static class Builder
     {
-        private Inflow inflow;
-        private Outflow outflow;
-        private Volume volume;
-        private Height height;
-        private Pressure pressure;
+        private Quantity inflow;
+        private Quantity outflow;
+        private Quantity volume;
+        private Quantity height;
+        private Quantity pressure;
 
-        public Builder withInflow(Inflow inflow)
+        public Builder withInflow(Quantity inflow)
         {
             this.inflow = inflow;
             return this;
         }
-        public Builder withOutflow(Outflow outflow)
+        public Builder withOutflow(Quantity outflow)
         {
             this.outflow = outflow;
             return this;
         }
-        public Builder withVolume(Volume volume)
+        public Builder withVolume(Quantity volume)
         {
             this.volume = volume;
             return this;
         }
-        public Builder withHeight(Height height)
+        public Builder withHeight(Quantity height)
         {
             this.height = height;
             return this;
         }
-        public Builder withPressure(Pressure pressure)
+        public Builder withPressure(Quantity pressure)
         {
             this.pressure = pressure;
             return this;
         }
 
-        public State copyOf(State state)
+        public Builder copyOf(State state)
         {
-            return new State(state.inflow, state.outflow, state.volume, state.height, state.pressure);
-            //this.inflowMagnitude = state.getInflow().getMagnitude();
+            Builder builder = new Builder()
+                    .withInflow(state.inflow)
+                    .withOutflow(state.outflow)
+                    .withVolume(state.volume)
+                    .withHeight(state.height)
+                    .withPressure(state.pressure);
+
+            return builder;
         }
 
         public State build()
@@ -82,7 +88,7 @@ public class State
         }
     }
 
-    /*
+
     public boolean equals(State state)
     {
         if(!state.inflow.getMagnitude().equals(this.inflow.getMagnitude()))
@@ -131,7 +137,6 @@ public class State
         }
         return true;
     }
-    */
 
     public String toString()
     {
