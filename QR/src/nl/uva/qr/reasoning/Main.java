@@ -14,10 +14,10 @@ class Main
     {
         dp = new Dependencies();
         myTree = new Tree(State.builder()
-                .withInflow(new Quantity(QuantityType.INFLOW, Magnitude.POSITIVE, Derivative.INCREASING))
+                .withInflow(new Quantity(QuantityType.INFLOW, Magnitude.OFF, Derivative.INCREASING))
                 .withOutflow(new Quantity(QuantityType.OUTFLOW, Magnitude.OFF, Derivative.STABLE))
                 .withVolume(new Quantity(QuantityType.VOLUME, Magnitude.OFF, Derivative.STABLE))
-                .withHeight(new Quantity(QuantityType.HEIGHT, Magnitude.POSITIVE, Derivative.INCREASING))
+                .withHeight(new Quantity(QuantityType.HEIGHT, Magnitude.OFF, Derivative.INCREASING))
                 .withPressure(new Quantity(QuantityType.PRESSURE,Magnitude.OFF, Derivative.STABLE))
                 .build());
 
@@ -34,14 +34,15 @@ class Main
 
     private static void runDependencies(final Node node)
     {
-        /*dp.processDerivatives(node).ifPresent(state->
+        dp.processDerivatives(node).ifPresent(state->
         {
             System.out.println("Derivatives toegepast op de onderstaande node: ");
             System.out.println(node.toString());
             myTree.addChild(node, state);
             System.out.println("Child:");
             System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-        });*/
+            //runDependencies(node.getChildren().get(node.getChildren().size()-1));
+        });
 
         dp.influencePos(node).ifPresent(state ->
         {
