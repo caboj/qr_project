@@ -7,7 +7,7 @@ import java.util.List;
 
 class Main
 {
-    static Dependencies dp;
+    private static Dependencies dp;
 
     public static void main(String[] args)
     {
@@ -69,7 +69,7 @@ class Main
 
     private static Node execute(State state)
     {
-        Node rootNode = new Node(state, Main::a);
+        Node rootNode = new Node(state, Main::cleanUpDerivatives);
         System.out.println("Totaal aantal verschillende states: " + (countNodes(rootNode) + 1));
         System.out.println("---------------------");
         System.out.println("Tree na het uitvoeren van alle dependencies op de root node:");
@@ -97,22 +97,22 @@ class Main
         int treeSize = node.getChildren().size();
         int childSizes = node.getChildren()
                 .stream()
-                .mapToInt(child -> countNodes(child))
+                .mapToInt(Main::countNodes)
                 .sum();
 
         return treeSize + childSizes;
     }
 
-    public static List<Node> a(State state)
+    private static List<Node> cleanUpDerivatives(State state)
     {
         final List<Node> list = new ArrayList<>();
         dp.processDerivatives(state)
-                .map(newState -> new Node(newState, Main::b))
+                .map(newState -> new Node(newState, Main::execureDependencies))
                 .ifPresent(list::add);
         return list;
     }
 
-    public static List<Node> b(State state)
+    private static List<Node> execureDependencies(State state)
     {
         final List<Node> list = new ArrayList<>();
         if (state.getId() > 200)
@@ -121,16 +121,16 @@ class Main
             return list;
         }
         dp.influencePos(state)
-                .map(newState -> new Node(newState, Main::b))
+                .map(newState -> new Node(newState, Main::cleanUpDerivatives))
                 .ifPresent(list::add);
         dp.influenceNeg(state)
-                .map(newState -> new Node(newState, Main::a))
+                .map(newState -> new Node(newState, Main::cleanUpDerivatives))
                 .ifPresent(list::add);
         dp.proportionalityPos(state)
-                .map(newState -> new Node(newState, Main::a))
+                .map(newState -> new Node(newState, Main::cleanUpDerivatives))
                 .ifPresent(list::add);
         dp.VC(state)
-                .map(newState -> new Node(newState, Main::a))
+                .map(newState -> new Node(newState, Main::cleanUpDerivatives))
                 .ifPresent(list::add);
 
 

@@ -44,20 +44,7 @@ enum Derivative
         return previous;
     }
 
-    public boolean isDecreasing()
-    {
-        return this == DECREASING;
-    }
 
-    public boolean isStable()
-    {
-        return this == STABLE;
-    }
-
-    public boolean isIncreasing()
-    {
-        return this == INCREASING;
-    }
 
 
 }

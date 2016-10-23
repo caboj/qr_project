@@ -1,6 +1,7 @@
 package nl.uva.qr.reasoning;
 
-public class Quantity
+@SuppressWarnings("ALL")
+class Quantity
 {
     private final QuantityType type;
     private final Magnitude magnitude;

@@ -2,8 +2,8 @@ package nl.uva.qr.reasoning;
 
 import java.util.Optional;
 
-@SuppressWarnings("DanglingJavadoc")
-public class Dependencies
+@SuppressWarnings({"DanglingJavadoc", "AccessStaticViaInstance"})
+class Dependencies
 {
     /**
      * Twee soorten invloeden:
@@ -80,7 +80,7 @@ public class Dependencies
      * I+(Inflow, Volume)
      * The amount of inflow increases the volume of water in the tub (magnitude van inflow -> derivative Volume)
      *
-     * @param node Node with start state as node.getData()
+     * @param state Node with start state as node.getData()
      * @return Returns an Optional<State>, means if there are changes,
      * it returns an optional with a new derived state in it.
      * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
@@ -259,7 +259,7 @@ public class Dependencies
     /**
      * Additional method to decide which of the two VC methods to call.
      *
-     * @param node Node with start state as node.getData()
+     * @param state Node with start state as node.getData()
      */
 
     Optional<State> VC(State state)

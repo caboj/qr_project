@@ -1,9 +1,10 @@
 package nl.uva.qr.reasoning;
 
+@SuppressWarnings("ALL")
 public class State
 {
-    public static int lastId = 0;
-    private int id;
+    private static int lastId = 0;
+    private final int id;
 
     final Quantity inflow;
     final Quantity outflow;

@@ -35,11 +35,6 @@ enum Magnitude
         return symbol;
     }
 
-    private Magnitude getNext()
-    {
-        return next;
-    }
-
     public Magnitude getPrevious()
     {
         return previous;
