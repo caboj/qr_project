@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>nl.uva.qr</OriginalElement>
+  <nodes>
+    <node x="734.4930662557781" y="1151.9114021571652">nl.uva.qr.reasoning.Dependencies</node>
+    <node x="107.5" y="845.0">nl.uva.qr.tree.Node</node>
+    <node x="570.0" y="893.6625577812016">nl.uva.qr.reasoning.Main</node>
+    <node x="527.6209553158703" y="176.75731895223424">nl.uva.qr.reasoning.Derivative</node>
+    <node x="983.6841294298922" y="565.3081664098613">nl.uva.qr.reasoning.Magnitude</node>
+    <node x="119.0" y="1147.5">nl.uva.qr.tree.Tree</node>
+    <node x="55.5" y="173.0">nl.uva.qr.reasoning.State.Builder</node>
+    <node x="496.5" y="543.5">nl.uva.qr.reasoning.Quantity</node>
+    <node x="1031.3998459167951" y="911.193374422188">nl.uva.qr.reasoning.QuantityType</node>
+    <node x="85.5" y="565.5">nl.uva.qr.reasoning.State</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="nl.uva.qr.reasoning.State" target="nl.uva.qr.reasoning.State.Builder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.Main" target="nl.uva.qr.tree.Tree">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.Quantity" target="nl.uva.qr.reasoning.QuantityType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.Quantity" target="nl.uva.qr.reasoning.Magnitude">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.State.Builder" target="nl.uva.qr.reasoning.Quantity">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.Main" target="nl.uva.qr.reasoning.Quantity">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.State.Builder" target="nl.uva.qr.reasoning.State">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.Main" target="nl.uva.qr.reasoning.Dependencies">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.State" target="nl.uva.qr.reasoning.Quantity">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.reasoning.Quantity" target="nl.uva.qr.reasoning.Derivative">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.tree.Tree" target="nl.uva.qr.tree.Node">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="nl.uva.qr.tree.Node" target="nl.uva.qr.reasoning.State">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5490693739424704" x="633.0" y="754.0" />
+  <SelectedNodes>
+    <node>nl.uva.qr.reasoning.Dependencies</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
