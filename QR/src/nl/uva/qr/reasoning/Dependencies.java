@@ -70,6 +70,12 @@ public class Dependencies
             return Optional.empty();
         }
         tree.addChild(node, nextState);
+
+        System.out.println("Derivatives toegepast op de onderstaande node: ");
+        System.out.println(node.toString());
+        System.out.println("Child:");
+        System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
+
         return Optional.of(nextState);
     }
 
@@ -91,7 +97,14 @@ public class Dependencies
 
             State nextState = builder.build();
             tree.addChild(node, nextState);
-            processDerivatives(tree, node.getChildren().get(node.getChildren().size() - 1));
+
+            System.out.println("I+ op de onderstaande node: ");
+            System.out.println(node.toString());
+            System.out.println("Child:");
+            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
+
+            processDerivatives(tree, node.getChildren().get(node.getChildren().size()-1));
+            proportionalityPos(tree, node.getChildren().get(node.getChildren().size()-1));
             return Optional.of(nextState);
         }
         return Optional.empty();
@@ -115,8 +128,15 @@ public class Dependencies
 
             State nextState = builder.build();
             tree.addChild(node, nextState);
-            proportionalityPos(tree, node.getChildren().get(node.getChildren().size() - 1));
-            processDerivatives(tree, node.getChildren().get(node.getChildren().size() - 1));
+
+            System.out.println("I- op start node: ");
+            System.out.println(node.toString());
+            System.out.println("Child:");
+            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
+
+
+            processDerivatives(tree, node.getChildren().get(node.getChildren().size()-1));
+            proportionalityPos(tree, node.getChildren().get(node.getChildren().size()-1));
             return Optional.of(nextState);
         }
         return Optional.empty();
@@ -137,21 +157,21 @@ public class Dependencies
         switch (node.getData().volume.getDerivative())
         {
             case INCREASING:
-                builder.withInflow(node.getData().outflow.increaseDerivative());
-                builder.withInflow(node.getData().height.increaseDerivative());
+                builder.withOutflow(node.getData().outflow.increaseDerivative());
+                builder.withHeight(node.getData().height.increaseDerivative());
                 break;
             case DECREASING:
-                builder.withInflow(node.getData().outflow.decreaseDerivative());
-                builder.withInflow(node.getData().height.decreaseDerivative());
+                builder.withOutflow(node.getData().outflow.decreaseDerivative());
+                builder.withHeight(node.getData().height.decreaseDerivative());
                 break;
         }
         switch (node.getData().height.getDerivative())
         {
             case INCREASING:
-                builder.withInflow(node.getData().pressure.increaseDerivative());
+                builder.withPressure(node.getData().pressure.increaseDerivative());
                 break;
             case DECREASING:
-                builder.withInflow(node.getData().pressure.decreaseDerivative());
+                builder.withPressure(node.getData().pressure.decreaseDerivative());
                 break;
         }
 
@@ -162,6 +182,15 @@ public class Dependencies
             return Optional.empty();
         }
         tree.addChild(node, nextState);
+
+
+        System.out.println("P+ op start node: ");
+        System.out.println(node.toString());
+        System.out.println("Child:");
+        System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
+
+
+        processDerivatives(tree, node.getChildren().get(node.getChildren().size()-1));
         return Optional.of(nextState);
     }
 
@@ -181,7 +210,7 @@ public class Dependencies
     private Optional<State> maxVC(Tree tree, Node node)
     {
         State.Builder builder = node.getData().builder().copyOf(node.getData());
-        builder.withVolume(node.getData().outflow.increaseMagnitude());
+        builder.withOutflow(node.getData().outflow.increaseMagnitude());
 
         State nextState = builder.build();
 
@@ -190,6 +219,14 @@ public class Dependencies
             return Optional.empty();
         }
         tree.addChild(node, nextState);
+
+        System.out.println("VC(max) op start node: ");
+        System.out.println(node.toString());
+        System.out.println("Child:");
+        System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
+
+
+        processDerivatives(tree, node.getChildren().get(node.getChildren().size()-1));
         return Optional.of(nextState);
     }
 
@@ -209,7 +246,7 @@ public class Dependencies
     private Optional<State> zeroVC(Tree tree, Node node)
     {
         State.Builder builder = node.getData().builder().copyOf(node.getData());
-        builder.withVolume(node.getData().outflow.decreaseMagnitude());
+        builder.withOutflow(node.getData().outflow.decreaseMagnitude());
 
         State nextState = builder.build();
 
@@ -218,6 +255,14 @@ public class Dependencies
             return Optional.empty();
         }
         tree.addChild(node, nextState);
+
+        System.out.println("VC(zero) op start node: ");
+        System.out.println(node.toString());
+        System.out.println("Child:");
+        System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
+
+
+        processDerivatives(tree,node.getChildren().get(node.getChildren().size()-1));
         return Optional.of(nextState);
     }
 

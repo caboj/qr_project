@@ -30,6 +30,11 @@ class Main
         System.out.println("---------------------");
         System.out.println("Tree na het uitvoeren van alle dependencies op de root node:");
         myTree.printTree(myTree.getRoot());
+    /*    runDependencies(myTree, myTree.getRoot().getChildren().get(myTree.getRoot().getChildren().size()-1));
+        System.out.println("---------------------");
+
+        myTree.printTree(myTree.getRoot());*/
+
     }
 
     /***
@@ -39,49 +44,54 @@ class Main
      */
     private static void runDependencies(Tree tree, final Node node)
     {
+
         dp.processDerivatives(tree, node).ifPresent(state ->
         {
+/*
             System.out.println("Derivatives toegepast op de onderstaande node: ");
             System.out.println(node.toString());
             System.out.println("Child:");
             System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-            runDependencies(tree, node.getChildren().get(node.getChildren().size()-1));
+*/
+
+            dp.influencePos(tree, node.getChildren().get(node.getChildren().size()-1));
+            dp.influenceNeg(tree, node.getChildren().get(node.getChildren().size()-1));
+            dp.proportionalityPos(tree, node.getChildren().get(node.getChildren().size()-1));
+            dp.VC(tree, node.getChildren().get(node.getChildren().size()-1));
+
+            //runDependencies(tree, node.getChildren().get(node.getChildren().size()-1));
         });
 
         dp.influencePos(tree, node).ifPresent(state ->
         {
-            System.out.println("I+ op de onderstaande node: ");
+            /*System.out.println("I+ op de onderstaande node: ");
             System.out.println(node.toString());
             System.out.println("Child:");
-            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-            //runDependencies(tree,node.getChildren().get(node.getChildren().size() - 1));
+            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
         });
 
         dp.influenceNeg(tree, node).ifPresent(state ->
         {
-            System.out.println("I- op start node: ");
+            /*System.out.println("I- op start node: ");
             System.out.println(node.toString());
             System.out.println("Child:");
-            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-            //runDependencies(tree, node.getChildren().get(node.getChildren().size() - 1));
+            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
         });
 
         dp.VC(tree, node).ifPresent(state ->
         {
-            System.out.println("VC op start node: ");
+            /*System.out.println("VC op start node: ");
             System.out.println(node.toString());
             System.out.println("Child:");
-            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-            //runDependencies(node.getChildren().get(node.getChildren().size() - 1));
+            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
         });
 
         dp.proportionalityPos(tree, node).ifPresent(state ->
         {
-            System.out.println("P+ op start node: ");
+            /*System.out.println("P+ op start node: ");
             System.out.println(node.toString());
             System.out.println("Child:");
-            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());
-            //runDependencies(node.getChildren().get(node.getChildren().size() - 1));
+            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
         });
     }
 }
