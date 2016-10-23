@@ -68,10 +68,10 @@ public class Dependencies
             return Optional.empty();
         }
 
-        System.out.println("Derivatives toegepast op de onderstaande node: ");
-        System.out.println(state.toString());
+        /*System.out.println("Derivatives toegepast op de onderstaande node: ");
+        System.out.println(state.toString(""));
         System.out.println("Child:");
-        System.out.println(nextState.toString());
+        System.out.println(nextState.toString("\t"));*/
 
         return Optional.of(nextState);
     }
@@ -94,10 +94,10 @@ public class Dependencies
 
             State nextState = builder.build();
 
-            System.out.println("I+ op de onderstaande node: ");
-            System.out.println(state.toString());
+            /*System.out.println("I+ op de onderstaande node: ");
+            System.out.println(state.toString(""));
             System.out.println("Child:");
-            System.out.println(nextState.toString());
+            System.out.println(nextState.toString("\t"));*/
 
             if (!state.equals(nextState))
             {
@@ -125,10 +125,10 @@ public class Dependencies
 
             State nextState = builder.build();
 
-            System.out.println("I- op start node: ");
-            System.out.println(state.toString());
+            /*System.out.println("I- op start node: ");
+            System.out.println(state.toString(""));
             System.out.println("Child:");
-            System.out.println(nextState.toString());
+            System.out.println(nextState.toString("\t"));*/
 
             if (!state.equals(nextState))
             {
@@ -178,13 +178,15 @@ public class Dependencies
             return Optional.empty();
         }
         
-        System.out.println("P+ op start node: ");
-        System.out.println(state.toString());
+        /*System.out.println("P+ op start node: ");
+        System.out.println(state.toString(""));
         System.out.println("Child:");
-        System.out.println(nextState.toString());
+        System.out.println(nextState.toString("\t"));*/
 
         return Optional.of(nextState);
     }
+
+
 
     /**
      * The outflow is at its highest value (max), when the volume is at it highest value.
@@ -211,10 +213,10 @@ public class Dependencies
             return Optional.empty();
         }
 
-        System.out.println("VC(max) op start node: ");
-        System.out.println(state.toString());
+        /*System.out.println("VC(max) op start node: ");
+        System.out.println(state.toString(""));
         System.out.println("Child:");
-        System.out.println(nextState.toString());
+        System.out.println(nextState.toString("\t"));*/
 
         return Optional.of(nextState);
     }
@@ -227,7 +229,7 @@ public class Dependencies
      * After every new state all the dependencies have to be applied to the new state.
      * That is why this method is not recursive.
      *
-     * @param node Node with start state as node.getData()
+     * @param state Node with start state as node.getData()
      * @return Returns an Optional<State>, means if there are changes,
      * it returns an optional with a new derived state in it.
      * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
@@ -244,10 +246,10 @@ public class Dependencies
             return Optional.empty();
         }
 
-        System.out.println("VC(zero) op start node: ");
-        System.out.println(state.toString());
+        /*System.out.println("VC(zero) op start node: ");
+        System.out.println(state.toString(""));
         System.out.println("Child:");
-        System.out.println(nextState.toString());
+        System.out.println(nextState.toString("\t"));*/
 
         return Optional.of(nextState);
     }

@@ -20,7 +20,10 @@ public class Node
         this.data = data;
         this.action = action;
         this.name = "q";
-        apply();
+        if(action!=null)
+        {
+            apply();
+        }
     }
 
     public void apply()
@@ -33,7 +36,10 @@ public class Node
         return children;
     }
 
-
+    public State getData()
+    {
+        return data;
+    }
 
     public String getId()
     {
