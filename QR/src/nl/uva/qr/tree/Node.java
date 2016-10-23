@@ -9,7 +9,7 @@ public class Node
     private final State data;
     private String name;
     private String id;
-    private List<Node> children;
+    private final List<Node> children;
     private final Node parent;
 
     public Node(Node parent, State data)

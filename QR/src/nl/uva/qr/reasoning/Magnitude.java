@@ -1,10 +1,5 @@
 package nl.uva.qr.reasoning;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
-/**
- * Created by Elvira on 22-10-16.
- */
 enum Magnitude
 {
     OFF("0"),

@@ -1,9 +1,5 @@
 package nl.uva.qr.reasoning;
 
-import com.sun.tools.javadoc.Start;
-
-import java.time.OffsetDateTime;
-
 public class State
 {
     final Quantity inflow;
@@ -12,16 +8,7 @@ public class State
     final Quantity height;
     final Quantity pressure;
 
-    /**
-     *
-     * @param inflow
-     * @param outflow
-     * @param volume
-     * @param height
-     * @param pressure
-     *
-     *
-     */
+
     private State(Quantity inflow, Quantity outflow, Quantity volume, Quantity height, Quantity pressure)
     {
         this.inflow = inflow;
@@ -70,6 +57,7 @@ public class State
             return this;
         }
 
+        @SuppressWarnings("UnnecessaryLocalVariable")
         public Builder copyOf(State state)
         {
             Builder builder = new Builder()

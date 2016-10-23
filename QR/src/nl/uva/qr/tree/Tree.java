@@ -5,21 +5,18 @@ import nl.uva.qr.reasoning.State;
 public class Tree<T>
 {
     private final Node root;
+    private Node lastAddedNode;
 
     public Tree(State rootData)
     {
         root = new Node(null, rootData);
         root.setId("0");
+        lastAddedNode = root;
     }
 
     public Node getRoot()
     {
         return root;
-    }
-
-    public State getRootData()
-    {
-        return root.getData();
     }
 
     public Node addChild(Node parent, State data)
@@ -30,8 +27,14 @@ public class Tree<T>
         Node node = new Node(parent, data);
         node.setId(sb);
         parent.getChildren().add(node);
+        this.lastAddedNode = node;
 
         return node;
+    }
+
+    public Node getLastAddedNode()
+    {
+        return lastAddedNode;
     }
 
     public void printTreeByName(Node node, String appender)
@@ -52,7 +55,7 @@ public class Tree<T>
 
     public void printTree(Node node)
     {
-        printTree(node, "\t");
+        printTree(node, " ");
     }
     private void printTree(Node node, String appender)
     {
@@ -71,7 +74,6 @@ public class Tree<T>
 
         for (Node each : node.getChildren())
         {
-            //System.out.println("Ik heb een kind :D");
             this.printTree(each, appender + appender);
         }
     }
