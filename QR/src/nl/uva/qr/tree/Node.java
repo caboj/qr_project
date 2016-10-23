@@ -8,7 +8,7 @@ public class Node
 {
     private final State data;
     private String name;
-    private int id;
+    private String id;
     private List<Node> children;
     private final Node parent;
 
@@ -21,12 +21,12 @@ public class Node
 
     }
 
-    public int getId()
+    public String getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(String id)
     {
         this.id = id;
         this.name =name + id;

@@ -9,7 +9,7 @@ public class Tree<T>
     public Tree(State rootData)
     {
         root = new Node(null, rootData);
-        root.setId(0);
+        root.setId("0");
     }
 
     public Node getRoot()
@@ -28,7 +28,7 @@ public class Tree<T>
                 (parent.getChildren().size() + 1);
 
         Node node = new Node(parent, data);
-        node.setId(Integer.parseInt(sb));
+        node.setId(sb);
         parent.getChildren().add(node);
 
         return node;
