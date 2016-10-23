@@ -2,6 +2,9 @@ package nl.uva.qr.reasoning;
 
 public class State
 {
+    public static int lastId = 0;
+    private int id;
+
     final Quantity inflow;
     final Quantity outflow;
     final Quantity volume;
@@ -11,6 +14,8 @@ public class State
 
     private State(Quantity inflow, Quantity outflow, Quantity volume, Quantity height, Quantity pressure)
     {
+        lastId++;
+        this.id = lastId;
         this.inflow = inflow;
         this.outflow = outflow;
         this.volume = volume;
@@ -76,62 +81,44 @@ public class State
         }
     }
 
-
-    public boolean equals(State state)
+    public int getId()
     {
-        if(!state.inflow.getMagnitude().equals(this.inflow.getMagnitude()))
-        {
-            return false;
-        }
-        if(!state.inflow.getDerivative().equals(this.inflow.getDerivative()))
-        {
-            return false;
-        }
-
-        if(!state.outflow.getMagnitude().equals(this.outflow.getMagnitude()))
-        {
-            return false;
-        }
-        if(!state.outflow.getDerivative().equals(this.outflow.getDerivative()))
-        {
-            return false;
-        }
-
-        if(!state.volume.getMagnitude().equals(this.volume.getMagnitude()))
-        {
-            return false;
-        }
-        if(!state.volume.getDerivative().equals(this.volume.getDerivative()))
-        {
-            return false;
-        }
-
-        if(!state.height.getMagnitude().equals(this.height.getMagnitude()))
-        {
-            return false;
-        }
-        if(!state.height.getDerivative().equals(this.height.getDerivative()))
-        {
-            return false;
-        }
-
-        if(!state.pressure.getMagnitude().equals(this.pressure.getMagnitude()))
-        {
-            return false;
-        }
-        if(!state.pressure.getDerivative().equals(this.pressure.getDerivative()))
-        {
-            return false;
-        }
-        return true;
+        return id;
     }
 
-    public String toString()
+    @Override
+    public boolean equals(Object o)
     {
-        return inflow.toString() +
-                outflow.toString() +
-                volume.toString() +
-                height.toString() +
-                pressure.toString();
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        State state = (State) o;
+
+        if (!inflow.equals(state.inflow)) return false;
+        if (!outflow.equals(state.outflow)) return false;
+        if (!volume.equals(state.volume)) return false;
+        if (!height.equals(state.height)) return false;
+        return pressure.equals(state.pressure);
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = inflow.hashCode();
+        result = 31 * result + outflow.hashCode();
+        result = 31 * result + volume.hashCode();
+        result = 31 * result + height.hashCode();
+        result = 31 * result + pressure.hashCode();
+        return result;
+    }
+
+    public String toString(String prefix)
+    {
+        return prefix + inflow.toString() +
+                prefix + outflow.toString() +
+                prefix + volume.toString() +
+                prefix + height.toString() +
+                prefix + pressure.toString();
     }
 }

@@ -1,66 +1,94 @@
 package nl.uva.qr.reasoning;
 
 import nl.uva.qr.tree.Node;
-import nl.uva.qr.tree.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class Main
 {
     static Dependencies dp;
-    static Tree myTree;
 
     public static void main(String[] args)
     {
         dp = new Dependencies();
-        myTree = new Tree(State.builder()
+
+        State rootState = State.builder()
                 .withInflow(new Quantity(QuantityType.INFLOW, Magnitude.OFF, Derivative.INCREASING))
                 .withOutflow(new Quantity(QuantityType.OUTFLOW, Magnitude.OFF, Derivative.STABLE))
                 .withVolume(new Quantity(QuantityType.VOLUME, Magnitude.OFF, Derivative.STABLE))
                 .withHeight(new Quantity(QuantityType.HEIGHT, Magnitude.OFF, Derivative.STABLE))
-                .withPressure(new Quantity(QuantityType.PRESSURE,Magnitude.OFF, Derivative.STABLE))
-                .build());
-
-
+                .withPressure(new Quantity(QuantityType.PRESSURE, Magnitude.OFF, Derivative.STABLE))
+                .build();
         System.out.println("Start tree met alleen onderstaande root:");
-        myTree.printTree(myTree.getRoot());
         System.out.println("---------------------");
+        System.out.println(rootState.toString());
 
-        runDependencies(myTree, myTree.getRoot());
+        Node rootNode = new Node(rootState, Main::a);
+
         System.out.println("---------------------");
         System.out.println("Tree na het uitvoeren van alle dependencies op de root node:");
-        myTree.printTree(myTree.getRoot());
-        //myTree.printTreeByName(myTree.getRoot()," ");
+        printAll(rootNode, 0, "");
 
+        System.out.println("Totaal verschillende states: " + (countNodes(rootNode)+1) );
 
     }
 
-    /***
-     * The dependencies are runned depth first.
-     * Every new state is added as a child and all the dependencies are called again.
-     * @param node Start node to run dependencies on.
-     */
-    private static void runDependencies(Tree tree, final Node node)
+
+    private static void printAll(Node node, int depth, String append)
     {
-        dp.processDerivatives(tree, node).ifPresent(state ->
+        String tabs = "";
+        for(int a = 0; a < depth; a++)
         {
-           /* dp.influencePos(tree, tree.getLastAddedNode());
-            dp.influenceNeg(tree, tree.getLastAddedNode());
-            dp.proportionalityPos(tree, tree.getLastAddedNode());
-            dp.VC(tree, tree.getLastAddedNode());*/
-
-            dp.influencePos(tree, node.getChildren().get(node.getChildren().size()-1));
-            dp.influenceNeg(tree, node.getChildren().get(node.getChildren().size()-1));
-            dp.proportionalityPos(tree, tree.getLastAddedNode());
-            dp.VC(tree, tree.getLastAddedNode());
-
-            runDependencies(tree, tree.getLastAddedNode());
-        });
-
-        dp.influencePos(tree, tree.getLastAddedNode()).ifPresent(state -> System.out.println("I+ done"));
-
-        dp.influenceNeg(tree, tree.getLastAddedNode()).ifPresent(state -> System.out.println("I- done"));
-
-        dp.VC(tree, tree.getLastAddedNode()).ifPresent(state -> System.out.println("VC(MAX) of VC(0) done"));
-
-        dp.proportionalityPos(tree, tree.getLastAddedNode()).ifPresent(state -> System.out.println("P+ done"));
+            tabs+="\t";
+        }
+        System.out.println(node.toString(tabs));
+        node.getChildren().forEach(child->printAll(child, depth+1, append));
     }
+
+    private static int countNodes(Node node)
+    {
+        int treeSize = node.getChildren().size();
+        int childSizes = node.getChildren()
+                .stream()
+                .mapToInt(child->countNodes(child))
+                .sum();
+
+        return treeSize + childSizes;
+    }
+
+    public static List<Node> a(State state)
+    {
+        final List<Node> list = new ArrayList<>();
+        dp.processDerivatives(state)
+                .map(newState-> new Node(newState, Main::b))
+                .ifPresent(list::add);
+        return list;
+    }
+
+    public static List<Node> b(State state)
+    {
+        final List<Node> list = new ArrayList<>();
+        if(state.getId()>200)
+        {
+            System.out.println("Geforceerd stop, te veel children");
+            return list;
+        }
+        dp.influencePos(state)
+                .map(newState-> new Node(newState, Main::b))
+                .ifPresent(list::add);
+        dp.influenceNeg(state)
+                .map(newState-> new Node(newState, Main::a))
+                .ifPresent(list::add);
+        dp.proportionalityPos(state)
+                .map(newState-> new Node(newState, Main::a))
+                .ifPresent(list::add);
+        dp.VC(state)
+                .map(newState-> new Node(newState, Main::a))
+                .ifPresent(list::add);
+
+
+        return list;
+    }
+
 }

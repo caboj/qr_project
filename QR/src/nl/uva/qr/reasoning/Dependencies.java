@@ -1,8 +1,5 @@
 package nl.uva.qr.reasoning;
 
-import nl.uva.qr.tree.Node;
-import nl.uva.qr.tree.Tree;
-
 import java.util.Optional;
 
 @SuppressWarnings("DanglingJavadoc")
@@ -15,72 +12,66 @@ public class Dependencies
      * <p>
      * We beginnen met eigen states netjes "rechttrekken". Dat is een state die we kunnen returnen
      */
-    Optional<State> processDerivatives(Tree tree, Node node)
+    Optional<State> processDerivatives(State state)
     {
-        State.Builder builder = node.getData().builder().copyOf(node.getData());
+        State.Builder builder = state.builder().copyOf(state);
 
-        switch (node.getData().inflow.getDerivative())
+        switch (state.inflow.getDerivative())
         {
             case INCREASING:
-                builder.withInflow(node.getData().inflow.increaseMagnitude());
+                builder.withInflow(state.inflow.increaseMagnitude());
                 break;
             case DECREASING:
-                builder.withInflow(node.getData().inflow.decreaseMagnitude());
+                builder.withInflow(state.inflow.decreaseMagnitude());
                 break;
         }
-        switch ((node.getData().outflow.getDerivative()))
+        switch ((state.outflow.getDerivative()))
         {
             case INCREASING:
-                builder.withOutflow(node.getData().outflow.increaseMagnitude());
+                builder.withOutflow(state.outflow.increaseMagnitude());
                 break;
             case DECREASING:
-                builder.withOutflow(node.getData().outflow.decreaseMagnitude());
+                builder.withOutflow(state.outflow.decreaseMagnitude());
                 break;
         }
-        switch ((node.getData().volume.getDerivative()))
+        switch ((state.volume.getDerivative()))
         {
             case INCREASING:
-                builder.withVolume(node.getData().volume.increaseMagnitude());
+                builder.withVolume(state.volume.increaseMagnitude());
                 break;
             case DECREASING:
-                builder.withVolume(node.getData().volume.decreaseMagnitude());
+                builder.withVolume(state.volume.decreaseMagnitude());
                 break;
         }
-        switch ((node.getData().height.getDerivative()))
+        switch ((state.height.getDerivative()))
         {
             case INCREASING:
-                builder.withHeight(node.getData().height.increaseMagnitude());
+                builder.withHeight(state.height.increaseMagnitude());
                 break;
             case DECREASING:
-                builder.withHeight(node.getData().height.decreaseMagnitude());
+                builder.withHeight(state.height.decreaseMagnitude());
                 break;
         }
-        switch ((node.getData().pressure.getDerivative()))
+        switch ((state.pressure.getDerivative()))
         {
             case INCREASING:
-                builder.withPressure(node.getData().pressure.increaseMagnitude());
+                builder.withPressure(state.pressure.increaseMagnitude());
                 break;
             case DECREASING:
-                builder.withPressure(node.getData().pressure.decreaseMagnitude());
+                builder.withPressure(state.pressure.decreaseMagnitude());
                 break;
         }
         State nextState = builder.build();
 
-        if (node.getData().equals(nextState))
+        if (state.equals(nextState))
         {
             return Optional.empty();
         }
-        Node child = tree.addChild(node, nextState);
 
-        influencePos(tree, child);
-        influenceNeg(tree, child);
-        proportionalityPos(tree, child);
-        VC(tree, child);
-
-        /*System.out.println("Derivatives toegepast op de onderstaande node: ");
-        System.out.println(node.toString());
+        System.out.println("Derivatives toegepast op de onderstaande node: ");
+        System.out.println(state.toString());
         System.out.println("Child:");
-        System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
+        System.out.println(nextState.toString());
 
         return Optional.of(nextState);
     }
@@ -94,23 +85,24 @@ public class Dependencies
      * it returns an optional with a new derived state in it.
      * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
      */
-    Optional<State> influencePos(Tree tree, Node node)
+    Optional<State> influencePos(State state)
     {
-        if (node.getData().inflow.getMagnitude() == Magnitude.POSITIVE)
+        if (state.inflow.getMagnitude() == Magnitude.POSITIVE)
         {
-            State.Builder builder = node.getData().builder().copyOf(node.getData());
-            builder.withVolume(node.getData().volume.increaseDerivative());
+            State.Builder builder = state.builder().copyOf(state);
+            builder.withVolume(state.volume.increaseDerivative());
 
             State nextState = builder.build();
-            tree.addChild(node, nextState);
 
-            /*System.out.println("I+ op de onderstaande node: ");
-            System.out.println(node.toString());
+            System.out.println("I+ op de onderstaande node: ");
+            System.out.println(state.toString());
             System.out.println("Child:");
-            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
+            System.out.println(nextState.toString());
 
-            processDerivatives(tree, node.getChildren().get(node.getChildren().size()-1));
-            return Optional.of(nextState);
+            if (!state.equals(nextState))
+            {
+                return Optional.of(nextState);
+            }
         }
         return Optional.empty();
     }
@@ -119,27 +111,29 @@ public class Dependencies
      * I-(Outflow, Volume)
      * The amount of outflow decreases the volume of water in the tub
      *
-     * @param node Node with start state as node.getData()
+     * @param state Node with start state as node.getData()
      * @return Returns an Optional<State>, means if there are changes,
      * it returns an optional with a new derived state in it.
      * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
      */
-    Optional<State> influenceNeg(Tree tree,Node node)
+    Optional<State> influenceNeg(State state)
     {
-        if (node.getData().outflow.getMagnitude() == Magnitude.POSITIVE)
+        if (state.outflow.getMagnitude() == Magnitude.POSITIVE)
         {
-            State.Builder builder = node.getData().builder().copyOf(node.getData());
-            builder.withVolume(node.getData().volume.decreaseDerivative());
+            State.Builder builder = state.builder().copyOf(state);
+            builder.withVolume(state.volume.decreaseDerivative());
 
             State nextState = builder.build();
-            tree.addChild(node, nextState);
 
-           /*System.out.println("I- op start node: ");
-            System.out.println(node.toString());
+            System.out.println("I- op start node: ");
+            System.out.println(state.toString());
             System.out.println("Child:");
-            System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
+            System.out.println(nextState.toString());
 
-            return Optional.of(nextState);
+            if (!state.equals(nextState))
+            {
+                return Optional.of(nextState);
+            }
         }
         return Optional.empty();
     }
@@ -149,50 +143,46 @@ public class Dependencies
      * P+(Volume, Height)   - height changes are proportional to volume changes (volume derivative -> height derivative)
      * P+(Height, Pressure) - pressure changes are proportional to height changes (height derivative -> pressure derivative)
      *
-     * @param node Node with start state as node.getData()
+     * @param state Node with start state as node.getData()
      * @return Returns an Optional<State>, means if there are changes,
      * it returns an optional with a new derived state in it.
      */
-    Optional<State> proportionalityPos(Tree tree, Node node)
+    Optional<State> proportionalityPos(State state)
     {
-        State.Builder builder = node.getData().builder().copyOf(node.getData());
-        switch (node.getData().volume.getDerivative())
+        State.Builder builder = state.builder().copyOf(state);
+        switch (state.volume.getDerivative())
         {
             case INCREASING:
-                builder.withOutflow(node.getData().outflow.increaseDerivative());
-                builder.withHeight(node.getData().height.increaseDerivative());
+                builder.withOutflow(state.outflow.increaseDerivative());
+                builder.withHeight(state.height.increaseDerivative());
                 break;
             case DECREASING:
-                builder.withOutflow(node.getData().outflow.decreaseDerivative());
-                builder.withHeight(node.getData().height.decreaseDerivative());
+                builder.withOutflow(state.outflow.decreaseDerivative());
+                builder.withHeight(state.height.decreaseDerivative());
                 break;
         }
-        switch (node.getData().height.getDerivative())
+        switch (state.height.getDerivative())
         {
             case INCREASING:
-                builder.withPressure(node.getData().pressure.increaseDerivative());
+                builder.withPressure(state.pressure.increaseDerivative());
                 break;
             case DECREASING:
-                builder.withPressure(node.getData().pressure.decreaseDerivative());
+                builder.withPressure(state.pressure.decreaseDerivative());
                 break;
         }
 
         State nextState = builder.build();
 
-        if (node.getData().equals(nextState))
+        if (state.equals(nextState))
         {
             return Optional.empty();
         }
-        tree.addChild(node, nextState);
-
-
-        /*System.out.println("P+ op start node: ");
-        System.out.println(node.toString());
+        
+        System.out.println("P+ op start node: ");
+        System.out.println(state.toString());
         System.out.println("Child:");
-        System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
+        System.out.println(nextState.toString());
 
-
-        processDerivatives(tree, node.getChildren().get(0));
         return Optional.of(nextState);
     }
 
@@ -204,31 +194,28 @@ public class Dependencies
      * After every new state all the dependencies have to be applied to the new state.
      * That is why this method is not recursive.
      *
-     * @param node Node with start state as node.getData()
+     * @param state Node with start state as node.getData()
      * @return Returns an Optional<State>, means if there are changes,
      * it returns an optional with a new derived state in it.
      * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
      */
-    private Optional<State> maxVC(Tree tree, Node node)
+    private Optional<State> maxVC(State state)
     {
-        State.Builder builder = node.getData().builder().copyOf(node.getData());
-        builder.withOutflow(node.getData().outflow.increaseMagnitude());
+        State.Builder builder = state.builder().copyOf(state);
+        builder.withOutflow(state.outflow.increaseMagnitude());
 
         State nextState = builder.build();
 
-        if (node.getData().equals(nextState))
+        if (state.equals(nextState))
         {
             return Optional.empty();
         }
-        tree.addChild(node, nextState);
 
-        /*System.out.println("VC(max) op start node: ");
-        System.out.println(node.toString());
+        System.out.println("VC(max) op start node: ");
+        System.out.println(state.toString());
         System.out.println("Child:");
-        System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
+        System.out.println(nextState.toString());
 
-
-        processDerivatives(tree, node.getChildren().get(node.getChildren().size()-1));
         return Optional.of(nextState);
     }
 
@@ -245,26 +232,23 @@ public class Dependencies
      * it returns an optional with a new derived state in it.
      * If there are no changes, it returns an empty optional. This way, nullPointerExceptions can't appear anymore.
      */
-    private Optional<State> zeroVC(Tree tree, Node node)
+    private Optional<State> zeroVC(State state)
     {
-        State.Builder builder = node.getData().builder().copyOf(node.getData());
-        builder.withOutflow(node.getData().outflow.decreaseMagnitude());
+        State.Builder builder = state.builder().copyOf(state);
+        builder.withOutflow(state.outflow.decreaseMagnitude());
 
         State nextState = builder.build();
 
-        if (node.getData().equals(nextState))
+        if (state.equals(nextState))
         {
             return Optional.empty();
         }
-        tree.addChild(node, nextState);
 
-        /*System.out.println("VC(zero) op start node: ");
-        System.out.println(node.toString());
+        System.out.println("VC(zero) op start node: ");
+        System.out.println(state.toString());
         System.out.println("Child:");
-        System.out.println(node.getChildren().get(node.getChildren().size() - 1).toString());*/
+        System.out.println(nextState.toString());
 
-
-        processDerivatives(tree,node.getChildren().get(node.getChildren().size()-1));
         return Optional.of(nextState);
     }
 
@@ -276,14 +260,14 @@ public class Dependencies
      * @param node Node with start state as node.getData()
      */
 
-    Optional<State> VC(Tree tree, Node node)
+    Optional<State> VC(State state)
     {
-        if (node.getData().volume.getMagnitude() == Magnitude.MAX)
+        if (state.volume.getMagnitude() == Magnitude.MAX)
         {
-            return maxVC(tree, node);
-        } else if (node.getData().volume.getMagnitude() == Magnitude.OFF)
+            return maxVC(state);
+        } else if (state.volume.getMagnitude() == Magnitude.OFF)
         {
-            return zeroVC(tree, node);
+            return zeroVC(state);
         }
         return Optional.empty();
     }

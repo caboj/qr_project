@@ -2,6 +2,8 @@ package nl.uva.qr.tree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+
 import nl.uva.qr.reasoning.State;
 
 public class Node
@@ -9,17 +11,29 @@ public class Node
     private final State data;
     private String name;
     private String id;
-    private final List<Node> children;
-    private final Node parent;
 
-    public Node(Node parent, State data)
+    private final List<Node> children = new ArrayList<>();
+    private final Function<State, List<Node>> action;
+
+    public Node(State data, Function<State, List<Node>> action)
     {
-        this.parent = parent;
         this.data = data;
+        this.action = action;
         this.name = "q";
-        this.children = new ArrayList<>();
-
+        apply();
     }
+
+    public void apply()
+    {
+        children.addAll(action.apply(data));
+    }
+
+    public List<Node> getChildren()
+    {
+        return children;
+    }
+
+
 
     public String getId()
     {
@@ -37,24 +51,13 @@ public class Node
         return name;
     }
 
-    public State getData()
+    public String toString(String prefix)
     {
-        return data;
+        return this.data.toString(prefix);
     }
 
-
-    public List<Node> getChildren()
+    private static void printChildren(List<Node> list)
     {
-        return children;
-    }
-
-    Node getParent()
-    {
-        return parent;
-    }
-
-    public String toString()
-    {
-        return this.data.toString();
+        list.forEach(System.out::println);
     }
 }

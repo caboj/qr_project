@@ -42,6 +42,29 @@ public class Quantity
         return derivative;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Quantity quantity = (Quantity) o;
+
+        if (type != quantity.type) return false;
+        if (magnitude != quantity.magnitude) return false;
+        return derivative == quantity.derivative;
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = type.hashCode();
+        result = 31 * result + magnitude.hashCode();
+        result = 31 * result + derivative.hashCode();
+        return result;
+    }
+
     public String toString()
     {
         return (type + ": \t" + this.getMagnitude().getSymbol() + "\t" + this.getDerivative().getSymbol() + "\n");
