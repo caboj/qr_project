@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="QR:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/QR_jar</output-path>
+    <root id="archive" name="QR.jar">
+      <element id="module-output" name="QR" />
+    </root>
+  </artifact>
+</component>
