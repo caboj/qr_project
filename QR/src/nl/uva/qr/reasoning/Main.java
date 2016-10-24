@@ -132,7 +132,9 @@ class Main
         dp.VC(state)
                 .map(newState -> new Node(newState, Main::cleanUpDerivatives))
                 .ifPresent(list::add);
-
+        dp.processDerivatives(state)
+                .map(newState -> new Node(newState, Main::cleanUpDerivatives))
+                .ifPresent(list::add);
 
         return list;
     }

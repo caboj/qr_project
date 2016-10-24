@@ -5,6 +5,18 @@ import java.util.Optional;
 @SuppressWarnings({"DanglingJavadoc", "AccessStaticViaInstance"})
 class Dependencies
 {
+    private boolean printTrace = true;
+
+    private void printTrace(State state, State nextState, String dependencie)
+    {
+        if(printTrace = true)
+        {
+            System.out.println(dependencie + " toegepast op de onderstaande node: ");
+            System.out.println(state.toString(""));
+            System.out.println("Child:");
+            System.out.println(nextState.toString("\t"));
+        }
+    }
     /**
      * Twee soorten invloeden:
      * 1 - Aan de hand van de derivatives eigen magnitudes veranderen (state "rechttrekken")
@@ -68,10 +80,7 @@ class Dependencies
             return Optional.empty();
         }
 
-        /*System.out.println("Derivatives toegepast op de onderstaande node: ");
-        System.out.println(state.toString(""));
-        System.out.println("Child:");
-        System.out.println(nextState.toString("\t"));*/
+        printTrace(state, nextState, "Derivatives");
 
         return Optional.of(nextState);
     }
@@ -94,15 +103,12 @@ class Dependencies
 
             State nextState = builder.build();
 
-            /*System.out.println("I+ op de onderstaande node: ");
-            System.out.println(state.toString(""));
-            System.out.println("Child:");
-            System.out.println(nextState.toString("\t"));*/
-
             if (!state.equals(nextState))
             {
                 return Optional.of(nextState);
             }
+
+            printTrace(state, nextState, "I+");
         }
         return Optional.empty();
     }
@@ -125,15 +131,11 @@ class Dependencies
 
             State nextState = builder.build();
 
-            /*System.out.println("I- op start node: ");
-            System.out.println(state.toString(""));
-            System.out.println("Child:");
-            System.out.println(nextState.toString("\t"));*/
-
             if (!state.equals(nextState))
             {
                 return Optional.of(nextState);
             }
+            printTrace(state, nextState, "I-");
         }
         return Optional.empty();
     }
@@ -177,11 +179,8 @@ class Dependencies
         {
             return Optional.empty();
         }
-        
-        /*System.out.println("P+ op start node: ");
-        System.out.println(state.toString(""));
-        System.out.println("Child:");
-        System.out.println(nextState.toString("\t"));*/
+
+        printTrace(state, nextState, "P+");
 
         return Optional.of(nextState);
     }
@@ -213,11 +212,7 @@ class Dependencies
             return Optional.empty();
         }
 
-        /*System.out.println("VC(max) op start node: ");
-        System.out.println(state.toString(""));
-        System.out.println("Child:");
-        System.out.println(nextState.toString("\t"));*/
-
+        printTrace(state, nextState, "VC(MAX)");
         return Optional.of(nextState);
     }
 
@@ -246,11 +241,7 @@ class Dependencies
             return Optional.empty();
         }
 
-        /*System.out.println("VC(zero) op start node: ");
-        System.out.println(state.toString(""));
-        System.out.println("Child:");
-        System.out.println(nextState.toString("\t"));*/
-
+        printTrace(state, nextState, "VC(zero)");
         return Optional.of(nextState);
     }
 
